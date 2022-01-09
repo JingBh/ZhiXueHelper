@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="top.jingbh.zhixuehelper">
+
+    <!-- TODO: Replace default app icon -->
+    <application
+        android:name=".Application"
+        android:allowBackup="false"
+        android:icon="@android:mipmap/sym_def_app_icon"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:theme="@style/Theme.ZhiXue"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".ui.exam.ListExamActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <!-- Why is this thing stupid as fuck: https://stackoverflow.com/a/8599921 -->
+                <data android:pathPattern=".*/user/user" />
+                <data android:pathPattern=".*\\..*/user/user" />
+                <data android:pathPattern=".*\\..*\\..*/user/user" />
+                <data android:pathPattern=".*\\..*\\..*\\..*/user/user" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*/user/user" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*/user/user" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*/user/user" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*/user/user" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+    <queries>
+
+        <package android:name="com.iflytek.elpmobile.student" />
+
+        <package android:name="com.iflytek.elpmobile.smartlearning" />
+
+    </queries>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="30" />
+
+</manifest>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login"
+    app:startDestination="@id/choose">
+
+    <dialog
+        android:id="@+id/manual"
+        android:name="top.jingbh.zhixuehelper.ui.auth.MethodManualFragment"
+        android:label="@string/method_manual" />
+
+    <fragment
+        android:id="@+id/choose"
+        android:name="top.jingbh.zhixuehelper.ui.auth.ChooseFragment"
+        android:label="@string/login_choose_method"
+        tools:layout="@layout/fragment_login_choose">
+
+        <action
+            android:id="@+id/choose_manual"
+            app:destination="@id/manual" />
+
+        <action
+            android:id="@+id/choose_webview"
+            app:destination="@id/webview" />
+
+        <action
+            android:id="@+id/choose_import"
+            app:destination="@id/import_" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/webview"
+        android:name="top.jingbh.zhixuehelper.ui.auth.MethodWebviewFragment"
+        android:label="@string/method_webview"
+        tools:layout="@layout/fragment_login_webview" />
+
+    <fragment
+        android:id="@+id/import_"
+        android:name="top.jingbh.zhixuehelper.ui.auth.MethodImportFragment"
+        android:label="@string/method_import"
+        tools:layout="@layout/fragment_login_import">
+
+        <argument
+            android:name="packageName"
+            app:argType="string"
+            app:nullable="false" />
+
+    </fragment>
+
+</navigation>

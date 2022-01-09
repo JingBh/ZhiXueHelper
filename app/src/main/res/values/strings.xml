@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">智学网查分助手</string>
+    <string name="list_exam">考试列表</string>
+    <string name="switch_account">切换账号</string>
+    <string name="refresh">刷新</string>
+    <string name="help">帮助</string>
+    <string name="about">关于</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="okay">好的</string>
+    <string name="login">登录</string>
+    <string name="login_loading">正在加载用户信息…</string>
+    <string name="login_failed">登录失败</string>
+    <string name="login_failed_help">无法获取用户信息，请检查密钥是否有效。</string>
+    <string name="login_help">我们需要获取到你的智学网账号的访问密钥，才能帮你查分。</string>
+    <string name="login_choose_method">选择登录方式</string>
+    <string name="login_switch_method">切换登录方式</string>
+    <string name="method_manual">手动输入密钥</string>
+    <string name="method_manual_help">如果你正好有一个能用的密钥（格式为 JWT），可以在此输入；否则请选择其它方式。</string>
+    <string name="method_webview">通过网页端登录</string>
+    <string name="method_webview_help">点击这里在网页端登录后，我们就可以在浏览器中读取你的密钥。</string>
+    <string name="method_import">从 智学网 app 导入</string>
+    <string name="method_import_student">从 智学网学生端 导入</string>
+    <string name="method_import_parent">从 智学网家长端 导入</string>
+    <string name="method_import_help">若已在智学网 app 中登录账号，我们可以尝试从中读取你的密钥。</string>
+    <string name="input_token">输入密钥…</string>
+    <string name="input_token_empty">未输入密钥</string>
+    <string name="import_check_permissions">检查权限</string>
+    <string name="import_check_permissions_help">我们需要有足够的权限才能从智学网 app 中读取密钥。</string>
+    <string name="import_need_permissions">请授予权限</string>
+    <string name="import_request_permissions">请求权限</string>
+    <string name="import_request_permissions_help">为了能够从智学网 app 中读取密钥，请授予读取外部存储的权限。</string>
+    <string name="import_fail">导入密钥失败</string>
+    <string name="import_fail_not_found">未找到用户信息文件的位置，无法导入。请检查你是否已登录智学网 app。</string>
+    <string name="import_fail_system">系统拒绝了我们的访问。</string>
+    <string name="import_fail_json">解析用户信息文件失败。</string>
+    <string name="import_assistance">我们需要一点帮助</string>
+    <string name="import_assistance_help">从 Android 11 开始，系统不再允许我们访问其他应用的文件了。好在我们有个备用方案：请在新打开的窗口选择“user”文件并使用智学网查分助手打开。</string>
+</resources>
