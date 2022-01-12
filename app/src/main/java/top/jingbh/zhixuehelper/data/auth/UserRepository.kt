@@ -3,6 +3,7 @@ package top.jingbh.zhixuehelper.data.auth
 import android.util.Log
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import top.jingbh.zhixuehelper.BuildConfig
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -24,6 +25,9 @@ class UserRepository @Inject constructor(
                 token = currentToken
             }
 
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Our token: $currentToken")
+            }
         }
 
         return token

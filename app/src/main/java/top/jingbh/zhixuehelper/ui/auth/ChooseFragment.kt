@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,7 +38,6 @@ class ChooseFragment : Fragment() {
 
         val listAdapter = Adapter()
         binding.list.apply {
-            layoutManager = LinearLayoutManager(context)
             adapter = listAdapter
             addItemDecoration(VerticalSpaceItemDecoration(context.dpToPx(24)))
         }
@@ -49,7 +47,7 @@ class ChooseFragment : Fragment() {
         }
     }
 
-    inner class ViewHolder(private val binding: ItemLoginMethodBinding) :
+    private inner class ViewHolder(private val binding: ItemLoginMethodBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         private val context = binding.root.context
@@ -87,7 +85,7 @@ class ChooseFragment : Fragment() {
         }
     }
 
-    inner class Adapter :
+    private inner class Adapter :
         ListAdapter<LoginMethods, ViewHolder>(object : DiffUtil.ItemCallback<LoginMethods>() {
             override fun areItemsTheSame(oldItem: LoginMethods, newItem: LoginMethods): Boolean {
                 return oldItem == newItem

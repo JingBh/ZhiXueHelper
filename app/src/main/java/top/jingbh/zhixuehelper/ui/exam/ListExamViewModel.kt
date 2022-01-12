@@ -1,56 +1,68 @@
 package top.jingbh.zhixuehelper.ui.exam
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import top.jingbh.zhixuehelper.data.auth.UserRepository
-import top.jingbh.zhixuehelper.domain.auth.CheckIsLoggedInUseCase
+import top.jingbh.zhixuehelper.data.exam.ExamRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class ListExamViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val checkIsLoggedInUseCase: CheckIsLoggedInUseCase
+    private val examRepository: ExamRepository
 ) : ViewModel() {
-    private val isLoading = MutableLiveData(false)
+    private val _uiState = MutableStateFlow(ListExamUiState())
 
-    fun isLoading(): LiveData<Boolean> = isLoading
+    val uiState = _uiState.asStateFlow()
 
-    // TODO: Replace with list.count == 0
-    private val isLoaded = MutableLiveData(false)
+    private val currentToken = MutableStateFlow<String?>(null)
 
-    fun isLoaded(): LiveData<Boolean> = isLoaded
-
-    private val isLoginNeeded = MutableLiveData(false)
-
-    fun isLoginNeeded(): LiveData<Boolean> = isLoginNeeded
-
-    fun reload() {
-        isLoading.value = true
-        isLoaded.value = false
-
-        checkIsLoggedInUseCase(viewModelScope) { result ->
-            isLoginNeeded.value = !result
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val pagingFlow = currentToken
+        .filterNotNull()
+        .flatMapLatest { token ->
+            Log.d(TAG, "New pager generated")
+            examRepository.getPager(token).flow.cachedIn(viewModelScope)
         }
 
+    fun checkLogin() {
         viewModelScope.launch {
-            val token = userRepository.getToken()
+            val result = userRepository.isLoggedIn()
+            _uiState.update { state ->
+                state.copy(
+                    isLoggedIn = result,
+                    isLoginNeeded = !result
+                )
+            }
 
-            if (token != null) {
-                // TODO
-            } else {
-                isLoading.value = false
-                isLoaded.value = false
+            if (result) {
+                val token = userRepository.getToken()
+                currentToken.emit(token)
             }
         }
     }
 
     fun wentToLogin() {
-        isLoading.value = false
-        isLoaded.value = false
-        isLoginNeeded.value = false
+        _uiState.update { state ->
+            state.copy(
+                isLoggedIn = false,
+                isLoginNeeded = false
+            )
+        }
+    }
+
+    data class ListExamUiState(
+        val isLoggedIn: Boolean = false,
+        val isLoginNeeded: Boolean = false
+    )
+
+    companion object {
+        private const val TAG = "ListExamViewModel"
     }
 }

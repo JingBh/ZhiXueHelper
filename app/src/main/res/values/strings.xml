@@ -10,6 +10,8 @@
     <string name="confirm">确定</string>
     <string name="okay">好的</string>
     <string name="login">登录</string>
+    <string name="others">其它</string>
+    <string name="loading">加载中…</string>
     <string name="login_loading">正在加载用户信息…</string>
     <string name="login_failed">登录失败</string>
     <string name="login_failed_help">无法获取用户信息，请检查密钥是否有效。</string>
@@ -37,4 +39,9 @@
     <string name="import_fail_json">解析用户信息文件失败。</string>
     <string name="import_assistance">我们需要一点帮助</string>
     <string name="import_assistance_help">从 Android 11 开始，系统不再允许我们访问其他应用的文件了。好在我们有个备用方案：请在新打开的窗口选择“user”文件并使用智学网查分助手打开。</string>
+    <string name="exam_type_weekly">统练</string>
+    <string name="exam_type_monthly">月考</string>
+    <string name="exam_type_midterm">期中</string>
+    <string name="exam_type_terminal">期末</string>
+    <string name="exam_list_loading">正在加载考试列表…</string>
 </resources>

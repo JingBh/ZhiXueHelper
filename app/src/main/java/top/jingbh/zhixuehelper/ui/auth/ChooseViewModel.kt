@@ -16,10 +16,8 @@ class ChooseViewModel @Inject constructor(
         emit(LoginMethods.getAvailableMethods(packageManager))
     }
 
-    private val recommendedMethods = MediatorLiveData<List<LoginMethods>>()
-
-    init {
-        recommendedMethods.addSource(methods) { methods ->
+    private val recommendedMethods = MediatorLiveData<List<LoginMethods>>().apply {
+        addSource(methods) { methods ->
             val result = arrayListOf<LoginMethods>()
 
             if (methods.contains(LoginMethods.IMPORT_STUDENT))
@@ -28,7 +26,7 @@ class ChooseViewModel @Inject constructor(
             if (methods.contains(LoginMethods.IMPORT_PARENT))
                 result.add(LoginMethods.IMPORT_PARENT)
 
-            recommendedMethods.postValue(result)
+            postValue(result)
         }
     }
 }

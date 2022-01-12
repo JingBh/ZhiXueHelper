@@ -3,8 +3,6 @@ package top.jingbh.zhixuehelper.ui.auth
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -12,7 +10,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONException
@@ -21,7 +18,7 @@ import org.json.JSONTokener
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.databinding.ActivityLoginBinding
 import top.jingbh.zhixuehelper.ui.exam.ListExamActivity
-import top.jingbh.zhixuehelper.ui.util.dpToPx
+import top.jingbh.zhixuehelper.ui.util.makeLoadingSnackbar
 import java.io.FileNotFoundException
 
 @AndroidEntryPoint
@@ -60,22 +57,8 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.isLoading().observe(this) { isLoading ->
             if (isLoading && loadingSnackbar == null) {
-                val snackbar =
-                    Snackbar.make(binding.root, R.string.login_loading, Snackbar.LENGTH_INDEFINITE)
-                loadingSnackbar = snackbar
-
-                val barTextId = com.google.android.material.R.id.snackbar_text
-                val contentLayout = snackbar.view.findViewById<View>(barTextId).parent as ViewGroup
-
-                val progress = CircularProgressIndicator(this).apply {
-                    setPadding(0, dpToPx(4), 0, dpToPx(4))
-                    trackThickness = dpToPx(3)
-                    indicatorSize = dpToPx(32)
-                    isIndeterminate = true
-                }
-                contentLayout.addView(progress, 0)
-
-                snackbar.show()
+                loadingSnackbar = makeLoadingSnackbar(binding.root, R.string.login_loading)
+                loadingSnackbar!!.show()
             } else if (loadingSnackbar != null) {
                 loadingSnackbar!!.dismiss()
                 loadingSnackbar = null

@@ -12,7 +12,7 @@ data class ZhiXueResponse(
             val errorCode = jsonObject.optInt("errorCode", 1)
 
             return ZhiXueResponse(
-                jsonObject.optInt("errorCode", 1),
+                errorCode,
                 jsonObject.optString("errorInfo", "Failed to decode JSON"),
                 if (errorCode == 0) jsonObject.optJSONObject("result") else null
             )

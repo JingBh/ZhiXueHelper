@@ -7,20 +7,18 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import top.jingbh.zhixuehelper.data.auth.UserRepository
-import top.jingbh.zhixuehelper.domain.auth.CheckIsLoggedInUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val checkIsLoggedInUseCase: CheckIsLoggedInUseCase
+    private val userRepository: UserRepository
 ) : ViewModel() {
     private val isLoading = MutableLiveData(false)
 
     fun isLoading(): LiveData<Boolean> = isLoading
 
     fun setLoading(isLoading: Boolean) {
-        this.isLoading.value = isLoading
+        this.isLoading.postValue(isLoading)
     }
 
     private val isLoggedIn = MutableLiveData(false)
@@ -47,9 +45,11 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun checkIsLoggedIn() {
-        setLoading(true)
+        viewModelScope.launch {
+            setLoading(true)
 
-        checkIsLoggedInUseCase(viewModelScope) { result ->
+            val result = userRepository.isLoggedIn()
+
             isLoggedIn.value = result
             isLoginFailed.value = !result
 
