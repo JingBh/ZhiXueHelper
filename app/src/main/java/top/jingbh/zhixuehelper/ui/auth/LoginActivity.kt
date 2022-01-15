@@ -17,7 +17,7 @@ import org.json.JSONObject
 import org.json.JSONTokener
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.databinding.ActivityLoginBinding
-import top.jingbh.zhixuehelper.ui.exam.ListExamActivity
+import top.jingbh.zhixuehelper.ui.exam.ExamListActivity
 import top.jingbh.zhixuehelper.ui.util.makeLoadingSnackbar
 import java.io.FileNotFoundException
 
@@ -82,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
         // On login success
         viewModel.isLoggedIn().observe(this) { isLoggedIn ->
             if (isLoggedIn) {
-                val intent = Intent(this, ListExamActivity::class.java)
+                val intent = Intent(this, ExamListActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
                 finish()

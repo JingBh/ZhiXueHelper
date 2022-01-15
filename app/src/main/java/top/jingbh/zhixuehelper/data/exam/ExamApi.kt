@@ -8,6 +8,8 @@ import top.jingbh.zhixuehelper.data.util.Pagination
 
 interface ExamApi {
     suspend fun getExamList(token: String, pageIndex: Int, pageSize: Int): Pagination<Exam>
+
+    suspend fun getExamPaperList(token: String, exam: Exam): List<ExamPaper>
 }
 
 @Module

@@ -13,7 +13,7 @@ import top.jingbh.zhixuehelper.data.exam.ExamRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class ListExamViewModel @Inject constructor(
+class ExamListViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val examRepository: ExamRepository
 ) : ViewModel() {
@@ -26,10 +26,12 @@ class ListExamViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagingFlow = currentToken
         .filterNotNull()
+        .distinctUntilChanged()
         .flatMapLatest { token ->
             Log.d(TAG, "New pager generated")
-            examRepository.getPager(token).flow.cachedIn(viewModelScope)
+            examRepository.getPager(token).flow
         }
+        .cachedIn(viewModelScope)
 
     fun checkLogin() {
         viewModelScope.launch {

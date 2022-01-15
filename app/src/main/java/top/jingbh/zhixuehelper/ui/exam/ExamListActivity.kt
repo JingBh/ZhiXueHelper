@@ -20,27 +20,27 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.Exam
-import top.jingbh.zhixuehelper.databinding.ActivityListExamBinding
+import top.jingbh.zhixuehelper.databinding.ActivityExamListBinding
 import top.jingbh.zhixuehelper.ui.auth.LoginActivity
 import top.jingbh.zhixuehelper.ui.util.DateFormatter
 import top.jingbh.zhixuehelper.ui.util.makeLoadingSnackbar
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ListExamActivity : AppCompatActivity() {
+class ExamListActivity : AppCompatActivity() {
     @Inject
     lateinit var dateFormatter: DateFormatter
 
-    private lateinit var binding: ActivityListExamBinding
+    private lateinit var binding: ActivityExamListBinding
 
     private var loadingSnackbar: Snackbar? = null
 
-    private val viewModel: ListExamViewModel by viewModels()
+    private val viewModel: ExamListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityListExamBinding.inflate(layoutInflater)
+        binding = ActivityExamListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
@@ -68,10 +68,8 @@ class ListExamActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.pagingFlow.collectLatest { pagingData ->
-                    adapter.submitData(pagingData)
-                }
+            viewModel.pagingFlow.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
             }
         }
 
@@ -126,7 +124,11 @@ class ListExamActivity : AppCompatActivity() {
                 holder.metaText.text = getString(item.type.toStringRes())
 
                 holder.root.setOnClickListener {
+                    val context = this@ExamListActivity
+                    val intent = Intent(context, ExamDetailsActivity::class.java)
+                    intent.putExtra(ExamDetailsActivity.EXTRA_EXAM, item)
 
+                    startActivity(intent)
                 }
             }
         }

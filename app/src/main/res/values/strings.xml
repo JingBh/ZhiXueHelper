@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">智学网查分助手</string>
-    <string name="list_exam">考试列表</string>
     <string name="switch_account">切换账号</string>
     <string name="refresh">刷新</string>
     <string name="help">帮助</string>
@@ -10,6 +9,7 @@
     <string name="confirm">确定</string>
     <string name="okay">好的</string>
     <string name="login">登录</string>
+    <string name="back">返回</string>
     <string name="others">其它</string>
     <string name="loading">加载中…</string>
     <string name="login_loading">正在加载用户信息…</string>
@@ -43,5 +43,24 @@
     <string name="exam_type_monthly">月考</string>
     <string name="exam_type_midterm">期中</string>
     <string name="exam_type_terminal">期末</string>
+    <string name="exam_list">考试列表</string>
     <string name="exam_list_loading">正在加载考试列表…</string>
+    <string name="exam_details">考试详情</string>
+    <string name="exam_details_no_paper">暂无试卷信息</string>
+    <string name="subject_list">科目列表</string>
+    <string name="subject_all">全科</string>
+    <string name="subject_chinese">语文</string>
+    <string name="subject_mathematics">数学</string>
+    <string name="subject_english">英语</string>
+    <string name="subject_physics">物理</string>
+    <string name="subject_chemistry">化学</string>
+    <string name="subject_politics">政治</string>
+    <string name="subject_history">历史</string>
+    <string name="subject_geography">地理</string>
+    <string name="subject_biology">生物</string>
+    <string name="subject_art">美术</string>
+    <string name="subject_music">音乐</string>
+    <string name="subject_information_technology">信息技术</string>
+    <string name="subject_general_technology">通用技术</string>
+    <string name="subject_physical_education">体育</string>
 </resources>

@@ -5,11 +5,13 @@ import androidx.paging.PagingConfig
 import javax.inject.Inject
 
 class ExamRepository @Inject constructor(
-    private val examPagingSourceFactory: ExamPagingSourceFactory
+    private val examPagingSourceFactory: ExamPagingSourceFactory,
+    private val examApi: ExamApi
 ) {
     fun getPager(token: String) = Pager(
         config = PagingConfig(pageSize = 10)
-    ) {
-        examPagingSourceFactory.create(token)
-    }
+    ) { examPagingSourceFactory.create(token) }
+
+    suspend fun getExamPaperList(token: String, exam: Exam) =
+        examApi.getExamPaperList(token, exam)
 }

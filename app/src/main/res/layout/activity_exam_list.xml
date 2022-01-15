@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.exam.ListExamActivity">
+    tools:context=".ui.exam.ExamListActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/list_exam"
-            app:title="@string/list_exam" />
+            app:title="@string/exam_list" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

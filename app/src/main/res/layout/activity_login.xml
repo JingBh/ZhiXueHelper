@@ -29,7 +29,7 @@
             app:menu="@menu/login"
             app:navigationContentDescription="@string/login_switch_method"
             app:navigationIcon="@drawable/ic_round_swap_horizontal_circle_24"
-            app:title="@string/login" />
+            tools:title="@string/login" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

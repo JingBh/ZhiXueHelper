@@ -2,14 +2,6 @@ package top.jingbh.zhixuehelper.data.exam
 
 import androidx.annotation.StringRes
 import top.jingbh.zhixuehelper.R
-import java.util.*
-
-data class Exam(
-    val id: String,
-    val name: String,
-    val type: ExamType,
-    val createdAt: Date
-)
 
 enum class ExamType {
     WEEKLY,
