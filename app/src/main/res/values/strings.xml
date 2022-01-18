@@ -12,6 +12,9 @@
     <string name="back">返回</string>
     <string name="others">其它</string>
     <string name="loading">加载中…</string>
+    <string name="next">继续</string>
+    <string name="agreements_title">用户须知与免责声明</string>
+    <string name="agreements_agree">我已阅读并同意以上内容</string>
     <string name="login_loading">正在加载用户信息…</string>
     <string name="login_failed">登录失败</string>
     <string name="login_failed_help">无法获取用户信息，请检查密钥是否有效。</string>

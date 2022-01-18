@@ -1,0 +1,11 @@
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap-reboot.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+
+body {
+  margin: 1rem;
+  overflow-wrap: break-word;
+}
+
+p {
+  font-family: 'Noto Serif SC', var(--bs-body-font-family);
+}
