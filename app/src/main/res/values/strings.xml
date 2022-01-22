@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">智学网查分助手</string>
+    <string name="app_developed_by" translatable="false">Developed by JingBh</string>
+    <string name="app_icon_designed_by" translatable="false">Icon designed by zhc7</string>
     <string name="switch_account">切换账号</string>
     <string name="refresh">刷新</string>
     <string name="help">帮助</string>
@@ -13,6 +15,7 @@
     <string name="others">其它</string>
     <string name="loading">加载中…</string>
     <string name="next">继续</string>
+    <string name="view_source">查看源码</string>
     <string name="agreements_title">用户须知与免责声明</string>
     <string name="agreements_agree">我已阅读并同意以上内容</string>
     <string name="login_loading">正在加载用户信息…</string>

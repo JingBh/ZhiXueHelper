@@ -18,6 +18,7 @@ import org.json.JSONTokener
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.databinding.ActivityLoginBinding
 import top.jingbh.zhixuehelper.ui.exam.ExamListActivity
+import top.jingbh.zhixuehelper.ui.page.AboutActivity
 import top.jingbh.zhixuehelper.ui.util.makeLoadingSnackbar
 import java.io.FileNotFoundException
 
@@ -51,6 +52,10 @@ class LoginActivity : AppCompatActivity() {
                     .setMessage(R.string.login_help)
                     .setPositiveButton(R.string.okay, null)
                     .show()
+                R.id.about -> {
+                    val intent = Intent(this, AboutActivity::class.java)
+                    startActivity(intent)
+                }
             }
             true
         }

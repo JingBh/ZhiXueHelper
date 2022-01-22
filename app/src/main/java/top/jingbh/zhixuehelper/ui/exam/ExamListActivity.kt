@@ -22,6 +22,7 @@ import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.Exam
 import top.jingbh.zhixuehelper.databinding.ActivityExamListBinding
 import top.jingbh.zhixuehelper.ui.auth.LoginActivity
+import top.jingbh.zhixuehelper.ui.page.AboutActivity
 import top.jingbh.zhixuehelper.ui.util.DateFormatter
 import top.jingbh.zhixuehelper.ui.util.makeLoadingSnackbar
 import javax.inject.Inject
@@ -46,6 +47,10 @@ class ExamListActivity : AppCompatActivity() {
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.switch_account -> toLogin()
+                R.id.about -> {
+                    val intent = Intent(this, AboutActivity::class.java)
+                    startActivity(intent)
+                }
             }
             true
         }
