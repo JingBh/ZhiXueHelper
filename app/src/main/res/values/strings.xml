@@ -20,6 +20,10 @@
     <string name="agreements_agree">我已阅读并同意以上内容</string>
     <string name="login_loading">正在加载用户信息…</string>
     <string name="login_failed">登录失败</string>
+    <string name="login_failed_null">密钥为空。</string>
+    <string name="login_failed_format">密钥格式错误。请检查输入的密钥是否正确。</string>
+    <string name="login_failed_expired">密钥已过期。请重新在网页端登录。</string>
+    <string name="login_failed_expired_imported">密钥已过期。智学网 app 会自动刷新密钥，请打开智学网 app，然后回来重试一次。</string>
     <string name="login_failed_help">无法获取用户信息，请检查密钥是否有效。</string>
     <string name="login_help">我们需要获取到你的智学网账号的访问密钥，才能帮你查分。</string>
     <string name="login_choose_method">选择登录方式</string>

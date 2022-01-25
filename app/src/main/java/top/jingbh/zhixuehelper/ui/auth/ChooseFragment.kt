@@ -1,11 +1,11 @@
 package top.jingbh.zhixuehelper.ui.auth
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -17,12 +17,14 @@ import top.jingbh.zhixuehelper.ui.util.VerticalSpaceItemDecoration
 import top.jingbh.zhixuehelper.ui.util.dpToPx
 import top.jingbh.zhixuehelper.util.PACKAGE_ZHIXUEAPP_PARENT
 import top.jingbh.zhixuehelper.util.PACKAGE_ZHIXUEAPP_STUDENT
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChooseFragment : Fragment() {
-    private lateinit var binding: FragmentLoginChooseBinding
+    @Inject
+    lateinit var packageManager: PackageManager
 
-    private val viewModel: ChooseViewModel by viewModels()
+    private lateinit var binding: FragmentLoginChooseBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,9 +44,8 @@ class ChooseFragment : Fragment() {
             addItemDecoration(VerticalSpaceItemDecoration(context.dpToPx(24)))
         }
 
-        viewModel.methods.observe(viewLifecycleOwner) { methods ->
-            listAdapter.submitList(methods)
-        }
+        val methods = LoginMethods.getAvailableMethods(packageManager)
+        listAdapter.submitList(methods)
     }
 
     private inner class ViewHolder(private val binding: ItemLoginMethodBinding) :

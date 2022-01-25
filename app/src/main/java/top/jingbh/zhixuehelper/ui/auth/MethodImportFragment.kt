@@ -19,10 +19,16 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.databinding.FragmentLoginImportBinding
 import javax.inject.Inject
@@ -68,41 +74,62 @@ class MethodImportFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.isCheckingPermissions().observe(viewLifecycleOwner) { isCheckingPermission ->
-            if (isCheckingPermission) {
-                binding.progress.visibility = View.VISIBLE
-                binding.iconStatus.visibility = View.GONE
-            } else {
-                binding.progress.visibility = View.GONE
-                binding.iconStatus.visibility = View.VISIBLE
-            }
+        lifecycleScope.launch {
+            viewModel.uiState
+                .map { it.isCheckingPermissions }
+                .collect {
+                    binding.progress.visibility = if (it) View.VISIBLE else View.GONE
+                    binding.iconStatus.visibility = if (it) View.GONE else View.VISIBLE
+                }
         }
 
-        viewModel.getCheckPermissionStatus().observe(viewLifecycleOwner) { status ->
-            val drawable = if (status == true) {
-                AppCompatResources.getDrawable(requireContext(), R.drawable.ic_round_check_24)
-            } else AppCompatResources.getDrawable(requireContext(), R.drawable.ic_round_close_24)
-            binding.iconStatus.setImageDrawable(drawable)
+        lifecycleScope.launch {
+            viewModel.uiState
+                .map { it.checkPermissionStatus }
+                .filterNotNull()
+                .collect { status ->
+                    val drawable = if (status) {
+                        AppCompatResources.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_round_check_24
+                        )
+                    } else AppCompatResources.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_round_close_24
+                    )
+                    binding.iconStatus.setImageDrawable(drawable)
+                }
         }
 
-        viewModel.needsRequestPermission().observe(viewLifecycleOwner) { needsRequestPermission ->
-            if (needsRequestPermission) requestPermission()
+        lifecycleScope.launch {
+            viewModel.uiState
+                .map { it.needsRequestPermission }
+                .filter { it }
+                .collect { requestPermission() }
         }
 
-        viewModel.getFailedMessage().observe(viewLifecycleOwner) { failedMessage ->
-            if (viewModel.isCheckingPermissions().value == false && failedMessage != null) {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.import_fail)
-                    .setMessage(failedMessage)
-                    .setPositiveButton(R.string.okay, null)
-                    .setOnDismissListener { navigateUp() }
-                    .show()
-            }
+        lifecycleScope.launch {
+            viewModel.uiState
+                .filter { !it.isCheckingPermissions }
+                .map { it.failedMessage }
+                .filterNotNull()
+                .collect { message ->
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.import_fail)
+                        .setMessage(message)
+                        .setPositiveButton(R.string.okay, null)
+                        .setOnDismissListener { navigateUp() }
+                        .show()
+                }
         }
 
-        viewModel.getToken().observe(viewLifecycleOwner) { token ->
-            loginViewModel.updateToken(token)
-            navigateUp()
+        lifecycleScope.launch {
+            viewModel.token
+                .filterNotNull()
+                .collect { token ->
+                    loginViewModel.updateToken(token, true)
+                    navigateUp()
+                }
         }
 
         checkPermissions()
@@ -156,7 +183,7 @@ class MethodImportFragment : Fragment() {
         Log.d(TAG, "INITIAL_URI scheme: $scheme")
 
         scheme = scheme.replace("/root/", "/document/")
-        val startDir = viewModel.getUserDir().value!!
+        val startDir = viewModel.userDir!!
             .replaceBefore("Android", "")
             .replace("/", "%2F")
         scheme += "%3A$startDir"

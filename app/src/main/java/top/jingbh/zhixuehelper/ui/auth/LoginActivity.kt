@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -12,6 +15,11 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -60,37 +68,55 @@ class LoginActivity : AppCompatActivity() {
             true
         }
 
-        viewModel.isLoading().observe(this) { isLoading ->
-            if (isLoading && loadingSnackbar == null) {
-                loadingSnackbar = makeLoadingSnackbar(binding.root, R.string.login_loading)
-                loadingSnackbar!!.show()
-            } else if (loadingSnackbar != null) {
-                loadingSnackbar!!.dismiss()
-                loadingSnackbar = null
-            }
-        }
-
-        // On login fail
-        viewModel.isLoginFailed().observe(this) { isLoginFailed ->
-            if (isLoginFailed == true) {
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.login_failed)
-                    .setMessage(R.string.login_failed_help)
-                    .setPositiveButton(R.string.okay, null)
-                    .setOnDismissListener {
-                        viewModel.clearLoginFailed()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState
+                    .map { it.isLoading }
+                    .collect { isLoading ->
+                        if (isLoading && loadingSnackbar == null) {
+                            loadingSnackbar =
+                                makeLoadingSnackbar(binding.root, R.string.login_loading)
+                            loadingSnackbar!!.show()
+                        } else if (loadingSnackbar != null) {
+                            loadingSnackbar!!.dismiss()
+                            loadingSnackbar = null
+                        }
                     }
-                    .show()
             }
         }
 
         // On login success
-        viewModel.isLoggedIn().observe(this) { isLoggedIn ->
-            if (isLoggedIn) {
-                val intent = Intent(this, ExamListActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(intent)
-                finish()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState
+                    .map { it.isLoggedIn }
+                    .filter { it }
+                    .collect {
+                        val intent =
+                            Intent(this@LoginActivity, ExamListActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        startActivity(intent)
+                        finish()
+                    }
+            }
+        }
+
+        // On login fail
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState
+                    .map { it.errorMessage }
+                    .filterNotNull()
+                    .collect { message ->
+                        MaterialAlertDialogBuilder(this@LoginActivity)
+                            .setTitle(R.string.login_failed)
+                            .setMessage(message)
+                            .setPositiveButton(R.string.okay, null)
+                            .setOnDismissListener {
+                                viewModel.clearLoginFailure()
+                            }
+                            .show()
+                    }
             }
         }
     }
@@ -122,7 +148,7 @@ class LoginActivity : AppCompatActivity() {
                         val jsonObject = JSONTokener(json).nextValue() as JSONObject
                         val token = jsonObject.getString("token")
 
-                        viewModel.updateToken(token)
+                        viewModel.updateToken(token, true)
 
                         reader.close()
                     } catch (e: JSONException) {
