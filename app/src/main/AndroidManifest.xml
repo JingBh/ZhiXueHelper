@@ -66,6 +66,10 @@
                 android:name="top.jingbh.zhixuehelper.initializer.WindowInitializer"
                 android:value="androidx.startup" />
 
+            <meta-data
+                android:name="top.jingbh.zhixuehelper.initializer.CookieInitializer"
+                android:value="androidx.startup" />
+
         </provider>
 
     </application>

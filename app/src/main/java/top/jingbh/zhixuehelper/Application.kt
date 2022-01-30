@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
-import android.webkit.CookieManager
 import com.android.volley.VolleyLog
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
@@ -23,7 +22,6 @@ class Application : Application() {
 
         initAgreements()
         initDynamicColors()
-        initWebViews()
         initDebug()
     }
 
@@ -59,10 +57,6 @@ class Application : Application() {
 
     private fun initDynamicColors() {
         DynamicColors.applyToActivitiesIfAvailable(this)
-    }
-
-    private fun initWebViews() {
-        CookieManager.getInstance().setAcceptCookie(true)
     }
 
     private fun initDebug() {
