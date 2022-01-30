@@ -3,7 +3,6 @@ plugins {
 }
 
 android {
-    namespace 'com.iflytek.elpmobile.smartlearning'
     compileSdk 31
 
     defaultConfig {

@@ -9,7 +9,6 @@ plugins {
 }
 
 android {
-    namespace = "top.jingbh.zhixuehelper"
     compileSdk = 31
 
     defaultConfig {
