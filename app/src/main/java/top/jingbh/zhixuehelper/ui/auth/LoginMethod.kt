@@ -11,7 +11,7 @@ import top.jingbh.zhixuehelper.util.PACKAGE_ZHIXUEAPP_PARENT
 import top.jingbh.zhixuehelper.util.PACKAGE_ZHIXUEAPP_STUDENT
 import top.jingbh.zhixuehelper.util.isPackageInstalled
 
-enum class LoginMethods {
+enum class LoginMethod {
     IMPORT_STUDENT,
     IMPORT_PARENT,
     WEBVIEW,
@@ -62,7 +62,7 @@ enum class LoginMethods {
     }
 
     companion object {
-        fun getAvailableMethods(packageManager: PackageManager): List<LoginMethods> {
+        fun getAvailableMethods(packageManager: PackageManager): List<LoginMethod> {
             return values().filter { method -> method.isAvailable(packageManager) }
         }
     }

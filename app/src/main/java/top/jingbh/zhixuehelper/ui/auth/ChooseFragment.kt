@@ -44,7 +44,7 @@ class ChooseFragment : Fragment() {
             addItemDecoration(VerticalSpaceItemDecoration(context.dpToPx(24)))
         }
 
-        val methods = LoginMethods.getAvailableMethods(packageManager)
+        val methods = LoginMethod.getAvailableMethods(packageManager)
         listAdapter.submitList(methods)
     }
 
@@ -53,20 +53,20 @@ class ChooseFragment : Fragment() {
 
         private val context = binding.root.context
 
-        fun bind(loginMethod: LoginMethods) {
+        fun bind(loginMethod: LoginMethod) {
             binding.name.text = loginMethod.getName(context.resources)
             binding.help.text = loginMethod.getHelp(context.resources)
             binding.iconApp.setImageDrawable(loginMethod.getIcon(context))
             loginMethod.getNavigationDestination().also { destination ->
                 when {
-                    loginMethod == LoginMethods.IMPORT_STUDENT -> {
+                    loginMethod == LoginMethod.IMPORT_STUDENT -> {
                         val action =
                             ChooseFragmentDirections.chooseImport(PACKAGE_ZHIXUEAPP_STUDENT)
                         binding.root.setOnClickListener { view ->
                             view.findNavController().navigate(action)
                         }
                     }
-                    loginMethod == LoginMethods.IMPORT_PARENT -> {
+                    loginMethod == LoginMethod.IMPORT_PARENT -> {
                         val action =
                             ChooseFragmentDirections.chooseImport(PACKAGE_ZHIXUEAPP_PARENT)
                         binding.root.setOnClickListener { view ->
@@ -87,12 +87,12 @@ class ChooseFragment : Fragment() {
     }
 
     private inner class Adapter :
-        ListAdapter<LoginMethods, ViewHolder>(object : DiffUtil.ItemCallback<LoginMethods>() {
-            override fun areItemsTheSame(oldItem: LoginMethods, newItem: LoginMethods): Boolean {
+        ListAdapter<LoginMethod, ViewHolder>(object : DiffUtil.ItemCallback<LoginMethod>() {
+            override fun areItemsTheSame(oldItem: LoginMethod, newItem: LoginMethod): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: LoginMethods, newItem: LoginMethods): Boolean {
+            override fun areContentsTheSame(oldItem: LoginMethod, newItem: LoginMethod): Boolean {
                 return oldItem == newItem
             }
         }) {
