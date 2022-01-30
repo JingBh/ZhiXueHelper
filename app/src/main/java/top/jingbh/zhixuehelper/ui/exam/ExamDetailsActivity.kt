@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.Exam
@@ -19,6 +20,8 @@ import top.jingbh.zhixuehelper.databinding.ActivityExamDetailsBinding
 @AndroidEntryPoint
 class ExamDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityExamDetailsBinding
+
+    private lateinit var adapter: FragmentStateAdapter
 
     private val viewModel: ExamDetailsViewModel by viewModels()
 
@@ -48,7 +51,7 @@ class ExamDetailsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.exam
-                    .distinctUntilChanged()
+                    .distinctUntilChangedBy { it.id }
                     .collect {
                         binding.topAppBar.title = it.name
                     }
@@ -56,27 +59,36 @@ class ExamDetailsActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.papers
-                    .distinctUntilChanged()
-                    .collect { papers ->
-                        binding.tabLayout.removeAllTabs()
+            viewModel.papers
+                .distinctUntilChanged()
+                .collectLatest { papers ->
+                    adapter = object : FragmentStateAdapter(this@ExamDetailsActivity) {
+                        override fun getItemCount(): Int {
+                            val count = papers.count()
+                            return if (count == 0) 1 else count
+                        }
 
-                        if (papers.isEmpty()) {
-                            val tab = binding.tabLayout.newTab()
-                            tab.setText(R.string.subject_all)
-
-                            binding.tabLayout.addTab(tab)
-                        } else {
-                            papers.forEach { paper ->
-                                val tab = binding.tabLayout.newTab()
-                                tab.text = paper.name
-
-                                binding.tabLayout.addTab(tab)
+                        override fun createFragment(position: Int): Fragment {
+                            val fragment = PaperDetailsFragment()
+                            fragment.arguments = Bundle().apply {
+                                putSerializable(
+                                    PaperDetailsFragment.ARGUMENT_PAPER,
+                                    papers[position]
+                                )
                             }
+
+                            return fragment
                         }
                     }
-            }
+
+                    binding.viewPager.adapter = adapter
+
+                    TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+                        if (papers.isEmpty() && position == 0) {
+                            tab.setText(R.string.subject_all)
+                        } else tab.text = papers[position].name
+                    }.attach()
+                }
         }
     }
 

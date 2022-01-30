@@ -1,5 +1,6 @@
 package top.jingbh.zhixuehelper.data.exam
 
+import android.net.Uri
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -10,6 +11,8 @@ interface ExamApi {
     suspend fun getExamList(token: String, pageIndex: Int, pageSize: Int): Pagination<Exam>
 
     suspend fun getExamPaperList(token: String, exam: Exam): List<ExamPaper>
+
+    suspend fun getExamPaperSheetImages(token: String, paper: ExamPaper): List<Uri>
 }
 
 @Module

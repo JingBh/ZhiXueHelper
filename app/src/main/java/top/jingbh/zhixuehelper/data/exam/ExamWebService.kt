@@ -1,7 +1,10 @@
 package top.jingbh.zhixuehelper.data.exam
 
+import android.net.Uri
 import android.util.Log
 import com.android.volley.Request
+import org.json.JSONArray
+import org.json.JSONTokener
 import top.jingbh.zhixuehelper.data.subject.Subject
 import top.jingbh.zhixuehelper.data.util.CustomRequestQueue
 import top.jingbh.zhixuehelper.data.util.Pagination
@@ -58,41 +61,84 @@ class ExamWebService @Inject constructor(
         requestQueue.addToRequestQueue(request)
     }
 
-    override suspend fun getExamPaperList(token: String, exam: Exam): List<ExamPaper> =
-        suspendCoroutine { continuation ->
-            val request = ZhiXueRequest(token, Request.Method.GET, {
-                appendPath("zhixuebao")
-                appendPath("report")
-                appendPath("exam")
-                appendPath("getReportMain")
-                appendQueryParameter("examId", exam.id)
-            }, null, { response ->
-                val data = response.result?.optJSONArray("paperList")?.let { jsonData ->
-                    val result = arrayListOf<ExamPaper>()
+    override suspend fun getExamPaperList(
+        token: String,
+        exam: Exam
+    ): List<ExamPaper> = suspendCoroutine { continuation ->
+        val request = ZhiXueRequest(token, Request.Method.GET, {
+            appendPath("zhixuebao")
+            appendPath("report")
+            appendPath("exam")
+            appendPath("getReportMain")
+            appendQueryParameter("examId", exam.id)
+        }, null, { response ->
+            val data = response.result?.optJSONArray("paperList")?.let { jsonData ->
+                val result = arrayListOf<ExamPaper>()
 
-                    for (i in 0 until jsonData.length()) {
-                        val jsonPaper = jsonData.getJSONObject(i)
-                        result.add(
-                            ExamPaper(
-                                jsonPaper.getString("paperId"),
-                                jsonPaper.getString("title"),
-                                jsonPaper.getString("paperName"),
-                                Subject.ofSubjectCode(jsonPaper.getString("subjectCode"))
-                            )
-                        )
-                    }
+                for (i in 0 until jsonData.length()) {
+                    val jsonPaper = jsonData.getJSONObject(i)
 
-                    result
-                } ?: listOf()
+                    val userScore = jsonPaper.optDouble(
+                        "preAssignScore",
+                        jsonPaper.getDouble("userScore")
+                    )
+                    val userLevel = jsonPaper.optString("userLevel")
 
-                continuation.resume(data)
-            }, { error ->
-                Log.e(TAG, "Request exam paper list failed", error)
-                throw error
-            })
+                    val paper = ExamPaper(
+                        jsonPaper.getString("paperId"),
+                        jsonPaper.getString("title"),
+                        jsonPaper.getString("paperName"),
+                        Subject.ofSubjectCode(jsonPaper.getString("subjectCode")),
+                        jsonPaper.getDouble("standardScore"),
+                        userScore,
+                        if (userLevel.isNotEmpty()) AssignedScore.valueOf(userLevel) else null
+                    )
 
-            requestQueue.addToRequestQueue(request)
-        }
+                    result.add(paper)
+                }
+
+                result
+            } ?: listOf()
+
+            continuation.resume(data)
+        }, { error ->
+            Log.e(TAG, "Request exam paper list failed", error)
+            throw error
+        })
+
+        requestQueue.addToRequestQueue(request)
+    }
+
+    override suspend fun getExamPaperSheetImages(
+        token: String,
+        paper: ExamPaper
+    ): List<Uri> = suspendCoroutine { continuation ->
+        val request = ZhiXueRequest(token, Request.Method.GET, {
+            appendPath("zhixuebao")
+            appendPath("report")
+            appendPath("paper")
+            appendPath("getCheckSheet")
+            appendQueryParameter("examId", "")
+            appendQueryParameter("paperId", paper.id)
+        }, null, { response ->
+            val json = response.result?.optString("sheetImages")
+                .takeIf { !it.isNullOrBlank() } ?: "[]"
+            val data = JSONTokener(json).nextValue() as JSONArray
+
+            val result = arrayListOf<Uri>()
+
+            for (i in 0 until data.length()) {
+                result.add(Uri.parse(data.getString(i)))
+            }
+
+            continuation.resume(result)
+        }, { error ->
+            Log.e(TAG, "Request exam paper sheet images failed", error)
+            throw error
+        })
+
+        requestQueue.addToRequestQueue(request)
+    }
 
     companion object {
         private const val TAG = "ExamWebService"

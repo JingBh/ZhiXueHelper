@@ -18,6 +18,8 @@
     <string name="view_source">查看源码</string>
     <string name="agreements_title">用户须知与免责声明</string>
     <string name="agreements_agree">我已阅读并同意以上内容</string>
+    <string name="under_construction" translatable="false">Under Construction</string>
+    <string name="under_construction_help">此功能还未完成。</string>
     <string name="login_loading">正在加载用户信息…</string>
     <string name="login_failed">登录失败</string>
     <string name="login_failed_null">密钥为空。</string>
@@ -57,6 +59,10 @@
     <string name="exam_list_loading">正在加载考试列表…</string>
     <string name="exam_details">考试详情</string>
     <string name="exam_details_no_paper">暂无试卷信息</string>
+    <string name="paper_original">原卷</string>
+    <string name="paper_score">分数</string>
+    <string name="paper_assigned_score">赋分</string>
+    <string name="paper_answers_title">查看得分详情与答案</string>
     <string name="subject_list">科目列表</string>
     <string name="subject_all">全科</string>
     <string name="subject_chinese">语文</string>

@@ -18,7 +18,7 @@ enum class Subject {
     ALL_,
     UNKNOWN_;
 
-    var variation: String? = null
+    var variation: String? = ""
 
     /*
     Defined by zhixue.com
@@ -55,16 +55,20 @@ enum class Subject {
         fun ofSubjectCode(subjectCode: String): Subject {
             var result = UNKNOWN_
 
-            values().forEach { subject ->
-                val thisSubjectCode = subject.getSubjectCode()
+            run loop@{
+                values().forEach { subject ->
+                    val thisSubjectCode = subject.getSubjectCode()
 
-                if (subjectCode == thisSubjectCode) {
-                    result = subject
-                } else if (!thisSubjectCode.isNullOrBlank()) {
-                    val variation = subjectCode.substringAfter(thisSubjectCode, "")
-                    if (variation != "") {
+                    if (subjectCode == thisSubjectCode) {
                         result = subject
-                        result.variation = variation
+                        return@loop
+                    } else if (!thisSubjectCode.isNullOrBlank()) {
+                        val variation = subjectCode.substringAfter(thisSubjectCode, "")
+                        if (variation != "") {
+                            result = subject
+                            result.variation = variation
+                            return@loop
+                        }
                     }
                 }
             }

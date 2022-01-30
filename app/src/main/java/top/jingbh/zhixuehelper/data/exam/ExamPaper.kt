@@ -9,5 +9,8 @@ data class ExamPaper(
     val id: String,
     val name: String,
     val fullName: String,
-    val subject: Subject
+    val subject: Subject,
+    val fullScore: Double,
+    val userScore: Double,
+    val userLevel: AssignedScore? = null
 ) : Serializable
