@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:window="http://schemas.android.com/apk/res-auto">
+
+    <ActivityRule window:alwaysExpand="true">
+
+        <ActivityFilter window:activityName="top.jingbh.zhixuehelper.ui.auth.LoginActivity" />
+
+    </ActivityRule>
+
+    <SplitPairRule
+        window:splitMinWidth="600dp"
+        window:splitRatio="0.3">
+
+        <SplitPairFilter
+            window:primaryActivityName="top.jingbh.zhixuehelper.ui.exam.ExamListActivity"
+            window:secondaryActivityName="top.jingbh.zhixuehelper.ui.exam.ExamDetailsActivity" />
+
+    </SplitPairRule>
+
+    <SplitPlaceholderRule
+        window:placeholderActivityName="top.jingbh.zhixuehelper.ui.exam.ExamListPlaceholderActivity"
+        window:splitMinWidth="600dp"
+        window:splitRatio="0.3">
+
+        <ActivityFilter window:activityName="top.jingbh.zhixuehelper.ui.exam.ExamListActivity" />
+
+    </SplitPlaceholderRule>
+
+</resources>
