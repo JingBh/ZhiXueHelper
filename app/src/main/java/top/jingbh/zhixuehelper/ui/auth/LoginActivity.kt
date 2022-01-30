@@ -26,7 +26,7 @@ import org.json.JSONTokener
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.databinding.ActivityLoginBinding
 import top.jingbh.zhixuehelper.ui.exam.ExamListActivity
-import top.jingbh.zhixuehelper.ui.page.AboutActivity
+import top.jingbh.zhixuehelper.ui.misc.AboutActivity
 import top.jingbh.zhixuehelper.ui.util.makeLoadingSnackbar
 import java.io.FileNotFoundException
 

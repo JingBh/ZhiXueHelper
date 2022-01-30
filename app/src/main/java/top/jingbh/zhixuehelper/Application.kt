@@ -8,7 +8,7 @@ import android.webkit.CookieManager
 import com.android.volley.VolleyLog
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
-import top.jingbh.zhixuehelper.ui.page.AgreementsActivity
+import top.jingbh.zhixuehelper.ui.misc.AgreementsActivity
 import top.jingbh.zhixuehelper.ui.util.Agreements
 import javax.inject.Inject
 

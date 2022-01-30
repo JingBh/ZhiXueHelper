@@ -1,4 +1,4 @@
-package top.jingbh.zhixuehelper.ui.page
+package top.jingbh.zhixuehelper.ui.misc
 
 import android.content.Intent
 import android.net.Uri

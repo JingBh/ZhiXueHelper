@@ -48,9 +48,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.page.AboutActivity" />
+        <activity android:name=".ui.misc.AboutActivity" />
 
-        <activity android:name=".ui.page.AgreementsActivity" />
+        <activity android:name=".ui.misc.AgreementsActivity" />
 
     </application>
 
