@@ -10,7 +10,7 @@
 ## Progress
 Currently in active development.
 
-未来将在此 repo 的 [Releases](https://github.com/JingBh/ZhiXueHelper/releases) 中发布第一个版本，敬请关注。
+已在此 repo 的 [Releases](https://github.com/JingBh/ZhiXueHelper/releases) 中发布第一个测试版本。
 
 ## Credits
  - App icon designed by [@zhc7](https://github.com/zhc7) ([`aaf852d`](https://github.com/JingBh/ZhiXueHelper/commit/aaf852df0eb9226db2d286beec54050cda4c8a78))
