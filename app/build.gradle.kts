@@ -20,7 +20,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        resValue("string", "app_version_info", "Version $versionName ($versionCode)")
+        buildConfigField("Boolean", "IS_STABLE", "false")
     }
 
     buildTypes {
