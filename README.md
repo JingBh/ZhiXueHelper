@@ -4,6 +4,8 @@
 </h1>
 
 ## Features
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJingBh%2FZhiXueHelper.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FJingBh%2FZhiXueHelper?ref=badge_shield)
+
  - 从智学网 app 中读取访问智学网 API 的密钥
  - 查询未发布的考试成绩
 
@@ -14,3 +16,7 @@ Currently in active development.
 
 ## Credits
  - App icon designed by [@zhc7](https://github.com/zhc7) ([`aaf852d`](https://github.com/JingBh/ZhiXueHelper/commit/aaf852df0eb9226db2d286beec54050cda4c8a78))
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJingBh%2FZhiXueHelper.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FJingBh%2FZhiXueHelper?ref=badge_large)
