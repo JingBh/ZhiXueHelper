@@ -1,6 +1,7 @@
 package top.jingbh.zhixuehelper.data.util
 
 import org.json.JSONObject
+import org.json.JSONTokener
 
 data class ZhiXueResponse(
     val errorCode: Int,
@@ -14,7 +15,15 @@ data class ZhiXueResponse(
             return ZhiXueResponse(
                 errorCode,
                 jsonObject.optString("errorInfo", "Failed to decode JSON"),
-                if (errorCode == 0) jsonObject.optJSONObject("result") else null
+                if (errorCode == 0) {
+                    val result = jsonObject.optJSONObject("result")
+                    if (result == null) {
+                        val resultJson = jsonObject.optString("result")
+                        if (resultJson.isNotBlank()) {
+                            JSONTokener(resultJson).nextValue() as JSONObject
+                        } else null
+                    } else result
+                } else null
             )
         }
     }

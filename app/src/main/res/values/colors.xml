@@ -53,8 +53,9 @@
     <color name="md_theme_dark_inverseSurface">#FFE0E3E1</color>
     <color name="md_theme_dark_primaryInverse">#FF006A60</color>
     <color name="md_seed">#0DC2B3</color>
+    <color name="md_seed_success">#FF66BB6A</color>
     <color name="md_seed_warning">#FFFFA726</color>
-    <color name="error">#FFBA1B1B</color>
+    <color name="md_seed_error">#FFEF5350</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

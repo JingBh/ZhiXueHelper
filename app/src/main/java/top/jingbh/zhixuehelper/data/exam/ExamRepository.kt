@@ -18,4 +18,7 @@ class ExamRepository @Inject constructor(
 
     suspend fun getExamPaperSheetImages(token: String, paper: ExamPaper) =
         sheetImageRepository.getSheetImages(token, paper)
+
+    suspend fun getExamPaperAnalysis(token: String, paper: ExamPaper) =
+        examApi.getExamPaperAnalysis(token, paper)
 }

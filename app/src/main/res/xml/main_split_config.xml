@@ -5,6 +5,8 @@
 
         <ActivityFilter window:activityName="top.jingbh.zhixuehelper.ui.auth.LoginActivity" />
 
+        <ActivityFilter window:activityName="top.jingbh.zhixuehelper.ui.exam.PaperAnalysisActivity" />
+
     </ActivityRule>
 
     <SplitPairRule

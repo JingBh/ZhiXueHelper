@@ -30,29 +30,27 @@ class ExamWebService @Inject constructor(
             appendQueryParameter("pageIndex", pageIndex.toString())
             appendQueryParameter("pageSize", pageSize.toString())
         }, null, { response ->
-            val data = response.result?.optJSONArray("examInfoList")?.let { jsonData ->
-                val result = arrayListOf<Exam>()
+            val data = response.result?.optJSONArray("examInfoList") ?: JSONArray()
 
-                for (i in 0 until jsonData.length()) {
-                    val jsonExam = jsonData.getJSONObject(i)
-                    result.add(
-                        Exam(
-                            jsonExam.getString("examId"),
-                            jsonExam.getString("examName"),
-                            ExamType.ofString(jsonExam.getString("examType")),
-                            Date(jsonExam.getLong("examCreateDateTime"))
-                        )
+            val result = arrayListOf<Exam>()
+
+            for (i in 0 until data.length()) {
+                val jsonExam = data.getJSONObject(i)
+                result.add(
+                    Exam(
+                        jsonExam.getString("examId"),
+                        jsonExam.getString("examName"),
+                        ExamType.ofString(jsonExam.getString("examType")),
+                        Date(jsonExam.getLong("examCreateDateTime"))
                     )
-                }
-
-                result
-            } ?: listOf()
+                )
+            }
 
             val totalPages = if (response.result?.getBoolean("hasNextPage") == true) {
                 pageIndex + 1
             } else pageIndex
 
-            continuation.resume(Pagination(pageIndex, data, pageSize, totalPages))
+            continuation.resume(Pagination(pageIndex, result, pageSize, totalPages))
         }, { error ->
             Log.e(TAG, "Request exam list failed", error)
             throw error
@@ -72,35 +70,33 @@ class ExamWebService @Inject constructor(
             appendPath("getReportMain")
             appendQueryParameter("examId", exam.id)
         }, null, { response ->
-            val data = response.result?.optJSONArray("paperList")?.let { jsonData ->
-                val result = arrayListOf<ExamPaper>()
+            val data = response.result?.optJSONArray("paperList") ?: JSONArray()
 
-                for (i in 0 until jsonData.length()) {
-                    val jsonPaper = jsonData.getJSONObject(i)
+            val result = arrayListOf<ExamPaper>()
 
-                    val userScore = jsonPaper.optDouble(
-                        "preAssignScore",
-                        jsonPaper.getDouble("userScore")
-                    )
-                    val userLevel = jsonPaper.optString("userLevel")
+            for (i in 0 until data.length()) {
+                val jsonPaper = data.getJSONObject(i)
 
-                    val paper = ExamPaper(
-                        jsonPaper.getString("paperId"),
-                        jsonPaper.getString("title"),
-                        jsonPaper.getString("paperName"),
-                        Subject.ofSubjectCode(jsonPaper.getString("subjectCode")),
-                        jsonPaper.getDouble("standardScore"),
-                        userScore,
-                        if (userLevel.isNotEmpty()) AssignedScore.valueOf(userLevel) else null
-                    )
+                val userScore = jsonPaper.optDouble(
+                    "preAssignScore",
+                    jsonPaper.getDouble("userScore")
+                )
+                val userLevel = jsonPaper.optString("userLevel")
 
-                    result.add(paper)
-                }
+                val paper = ExamPaper(
+                    jsonPaper.getString("paperId"),
+                    jsonPaper.getString("title"),
+                    jsonPaper.getString("paperName"),
+                    Subject.ofSubjectCode(jsonPaper.getString("subjectCode")),
+                    jsonPaper.getDouble("standardScore"),
+                    userScore,
+                    if (userLevel.isNotEmpty()) AssignedScore.valueOf(userLevel) else null
+                )
 
-                result
-            } ?: listOf()
+                result.add(paper)
+            }
 
-            continuation.resume(data)
+            continuation.resume(result)
         }, { error ->
             Log.e(TAG, "Request exam paper list failed", error)
             throw error
@@ -134,6 +130,58 @@ class ExamWebService @Inject constructor(
             continuation.resume(result)
         }, { error ->
             Log.e(TAG, "Request exam paper sheet images failed", error)
+            throw error
+        })
+
+        requestQueue.addToRequestQueue(request)
+    }
+
+    override suspend fun getExamPaperAnalysis(
+        token: String,
+        paper: ExamPaper
+    ): List<ExamPaperTopic> = suspendCoroutine { continuation ->
+        val request = ZhiXueRequest(token, Request.Method.GET, {
+            appendPath("zhixuebao")
+            appendPath("report")
+            appendPath("getPaperAnalysis")
+            appendQueryParameter("paperId", paper.id)
+        }, null, { response ->
+            val result = arrayListOf<ExamPaperTopic>()
+
+            val topicTypes = response.result?.optJSONArray("typeTopicAnalysis") ?: JSONArray()
+
+            for (i in 0 until topicTypes.length()) {
+                val jsonTopicType = topicTypes.getJSONObject(i)
+                val topics = jsonTopicType.getJSONArray("topicAnalysisDTOs")
+
+                for (j in 0 until topics.length()) {
+                    val jsonTopic = topics.getJSONObject(j)
+
+                    val topicId = jsonTopic.getInt("topicNumber")
+                    val topicType =
+                        ExamPaperTopicType.ofString(jsonTopic.optString("answerType"))
+
+                    val topic = ExamPaperTopic(
+                        topicId,
+                        topicType,
+                        jsonTopic.optString("dispTitle", topicId.toString()),
+                        jsonTopic.optString("standardAnswer")
+                            .takeIf { it.isNotBlank() },
+                        when (topicType) {
+                            ExamPaperTopicType.TEXT -> jsonTopic.getString("userAnswer")
+                            ExamPaperTopicType.IMAGE -> jsonTopic.optString("imageAnswer", "[]")
+                        },
+                        jsonTopic.getDouble("standardScore"),
+                        jsonTopic.getDouble("score")
+                    )
+
+                    result.add(topic)
+                }
+            }
+
+            continuation.resume(result)
+        }, { error ->
+            Log.e(TAG, "Request exam paper analysis failed", error)
             throw error
         })
 

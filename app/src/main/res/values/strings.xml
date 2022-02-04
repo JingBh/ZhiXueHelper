@@ -66,7 +66,14 @@
     <string name="paper_original">原卷</string>
     <string name="paper_score">分数</string>
     <string name="paper_assigned_score">赋分</string>
-    <string name="paper_answers_title">查看得分详情与答案</string>
+    <string name="paper_analysis">试卷详情</string>
+    <string name="paper_analysis_action">查看试卷详情</string>
+    <string name="paper_topic_title">第 %s 题</string>
+    <string name="paper_topic_answer_mine">我的答案</string>
+    <string name="paper_topic_answer_standard">标准答案</string>
+    <string name="paper_topic_answer_not_selected">未选择</string>
+    <string name="paper_topic_answer_not_filled">未填写</string>
+    <string name="paper_topic_score">得分</string>
     <string name="subject_list">科目列表</string>
     <string name="subject_all">全科</string>
     <string name="subject_chinese">语文</string>

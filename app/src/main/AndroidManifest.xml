@@ -26,6 +26,8 @@
 
         <activity android:name=".ui.exam.ExamDetailsActivity" />
 
+        <activity android:name=".ui.exam.PaperAnalysisActivity" />
+
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="true"

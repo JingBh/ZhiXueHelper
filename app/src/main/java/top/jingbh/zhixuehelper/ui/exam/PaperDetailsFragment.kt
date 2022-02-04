@@ -1,5 +1,6 @@
 package top.jingbh.zhixuehelper.ui.exam
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.android.volley.toolbox.NetworkImageView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.ExamPaper
 import top.jingbh.zhixuehelper.data.util.CustomRequestQueue
 import top.jingbh.zhixuehelper.databinding.FragmentPaperDetailsBinding
@@ -28,12 +30,14 @@ class PaperDetailsFragment : Fragment() {
 
     private val viewModel: PaperDetailsViewModel by viewModels()
 
+    private lateinit var paper: ExamPaper
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val paper = arguments?.getSerializable(ARGUMENT_PAPER) as ExamPaper
+        paper = arguments?.getSerializable(ARGUMENT_PAPER) as ExamPaper
         viewModel.initSetPaper(paper)
 
         binding = FragmentPaperDetailsBinding.inflate(layoutInflater, container, false)
@@ -56,6 +60,8 @@ class PaperDetailsFragment : Fragment() {
             viewModel.paper
                 .distinctUntilChangedBy { it.id }
                 .collectLatest { paper ->
+                    this@PaperDetailsFragment.paper = paper
+
                     binding.paperScoreMine.text = paper.userScore.emitDigits()
                     binding.paperScoreMax.text = " / " + paper.fullScore.emitDigits()
 
@@ -97,11 +103,10 @@ class PaperDetailsFragment : Fragment() {
         }
 
         binding.paperAnswersCard.setOnClickListener {
-            MaterialAlertDialogBuilder(it.context)
-                .setTitle(R.string.under_construction)
-                .setMessage(R.string.under_construction_help)
-                .setPositiveButton(R.string.okay, null)
-                .show()
+            val intent = Intent(it.context, PaperAnalysisActivity::class.java)
+            intent.putExtra(PaperAnalysisActivity.EXTRA_PAPER, paper)
+
+            startActivity(intent)
         }
     }
 

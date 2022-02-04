@@ -15,8 +15,8 @@ android {
         applicationId = "top.jingbh.zhixuehelper"
         minSdk = 23
         targetSdk = 31
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
         setProperty("archivesBaseName", "ZhiXueHelper-${versionName}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -62,7 +62,6 @@ android {
 dependencies {
     implementation("androidx.activity:activity-ktx:1.4.0")
     implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("androidx.collection:collection-ktx:1.2.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.3")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
     implementation("androidx.core:core-ktx:1.7.0")

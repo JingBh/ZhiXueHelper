@@ -2,13 +2,13 @@ package top.jingbh.zhixuehelper.data.util
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.collection.LruCache
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.Volley
 import dagger.hilt.android.qualifiers.ApplicationContext
+import io.github.reactivecircus.cache4k.Cache
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +18,9 @@ class CustomRequestQueue @Inject constructor(@ApplicationContext context: Contex
         ImageLoader(
             requestQueue,
             object : ImageLoader.ImageCache {
-                private val cache = LruCache<String, Bitmap>(20)
+                private val cache = Cache.Builder()
+                    .maximumCacheSize(40)
+                    .build<String, Bitmap>()
 
                 override fun getBitmap(url: String): Bitmap? {
                     return cache.get(url)
