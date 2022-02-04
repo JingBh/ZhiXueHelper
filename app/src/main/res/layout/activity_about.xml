@@ -93,6 +93,7 @@
                         android:layout_height="0dp"
                         android:layout_marginStart="16dp"
                         android:src="@drawable/ic_round_bug_report_24"
+                        android:tint="?attr/colorOnSecondaryContainer"
                         app:layout_constraintBottom_toBottomOf="@id/debugTitle"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@id/debugTitle" />
@@ -105,6 +106,7 @@
                         android:layout_marginTop="12dp"
                         android:layout_marginEnd="16dp"
                         android:text="@string/build_debug"
+                        android:textColor="?attr/colorOnSecondaryContainer"
                         android:textAppearance="?attr/textAppearanceTitleMedium"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/debugIcon"
@@ -118,6 +120,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="12dp"
                         android:text="@string/build_debug_help"
+                        android:textColor="?attr/colorOnSecondaryContainer"
                         android:textAppearance="?attr/textAppearanceBodySmall"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -150,6 +153,7 @@
                         android:layout_height="0dp"
                         android:layout_marginStart="16dp"
                         android:src="@drawable/ic_round_warning_amber_24"
+                        android:tint="?attr/colorOnSurface"
                         app:layout_constraintBottom_toBottomOf="@id/unstableTitle"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@id/unstableTitle" />

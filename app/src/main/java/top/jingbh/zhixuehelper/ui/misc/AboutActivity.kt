@@ -1,10 +1,12 @@
 package top.jingbh.zhixuehelper.ui.misc
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.ImageViewCompat
 import com.google.android.material.color.MaterialColors
 import top.jingbh.zhixuehelper.BuildConfig
 import top.jingbh.zhixuehelper.R
@@ -25,6 +27,12 @@ class AboutActivity : AppCompatActivity() {
             val warningColorSeed = getColor(R.color.md_seed_warning)
             val warningColors = MaterialColors.getColorRoles(this, warningColorSeed)
             binding.unstableCard.setCardBackgroundColor(warningColors.accentContainer)
+            ImageViewCompat.setImageTintList(
+                binding.unstableIcon,
+                ColorStateList.valueOf(warningColors.onAccentContainer)
+            )
+            binding.unstableTitle.setTextColor(warningColors.onAccentContainer)
+            binding.unstableHelp.setTextColor(warningColors.onAccentContainer)
 
             binding.unstableCard.visibility = View.VISIBLE
         }
