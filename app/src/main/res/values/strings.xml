@@ -22,8 +22,8 @@
     <string name="under_construction_help">此功能还未完成。</string>
     <string name="build_unstable">此版本是测试版</string>
     <string name="build_unstable_help">测试版可能不稳定、功能不全，且存在一定问题。</string>
-    <string name="build_debug">此版本是调试版</string>
-    <string name="build_debug_help">调试版仅限开发时使用，正常使用本 app 时应该安装发布版本。您是一名开发者吗？可以考虑为本项目贡献代码。</string>
+    <string name="build_debug">诶？这个图标背景怎么是黑的</string>
+    <string name="build_debug_help" translatable="false">This is a debug build, which is for development use only. Normally, you should use a release build. Are you a developer? Consider contributing to this project.</string>
     <string name="login_loading">正在加载用户信息…</string>
     <string name="login_failed">登录失败</string>
     <string name="login_failed_null">密钥为空。</string>
