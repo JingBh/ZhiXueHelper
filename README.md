@@ -6,13 +6,24 @@
 ## Features
 
 - 从智学网 app 中读取访问智学网 API 的密钥
-- 查询未发布的考试成绩
+- 查询**未发布**的考试成绩
+- 查询每题得分与选择题答案
+
+## Downloads
+
+- [Releases](https://github.com/JingBh/ZhiXueHelper/releases/latest)
 
 ## Progress
 
 Currently in active development.
 
 已在此 repo 的 [Releases](https://github.com/JingBh/ZhiXueHelper/releases) 中发布第一个测试版本。
+
+## Disclaimer
+
+由于个人开发水平问题，此 app 稳定性较差。对于已发布的考试，建议在智学网官方 app 或网站上查询。
+
+完整的用户须知与免责声明详见 [`agreements.html`](app/src/main/assets/pages/agreements.html)。
 
 ## Credits
 
