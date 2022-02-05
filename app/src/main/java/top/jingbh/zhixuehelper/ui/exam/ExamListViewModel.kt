@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import top.jingbh.zhixuehelper.data.auth.UserRepository
 import top.jingbh.zhixuehelper.data.exam.ExamRepository
+import top.jingbh.zhixuehelper.data.exam.ExamType
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,9 +60,24 @@ class ExamListViewModel @Inject constructor(
         }
     }
 
+    fun filterExamType(type: ExamType) {
+        _uiState.update { state ->
+            val types = state.examTypes.toMutableSet()
+
+            if (types.contains(type)) {
+                types.remove(type)
+            } else types.add(type)
+
+            if (types.size == ExamType.values().size) {
+                state.copy(examTypes = setOf())
+            } else state.copy(examTypes = types.toSet())
+        }
+    }
+
     data class ListExamUiState(
         val isLoggedIn: Boolean = false,
-        val isLoginNeeded: Boolean = false
+        val isLoginNeeded: Boolean = false,
+        val examTypes: Set<ExamType> = setOf()
     )
 
     companion object {

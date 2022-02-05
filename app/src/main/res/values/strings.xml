@@ -16,6 +16,7 @@
     <string name="loading">加载中…</string>
     <string name="next">继续</string>
     <string name="view_source">查看源码</string>
+    <string name="filter">筛选</string>
     <string name="agreements_title">用户须知与免责声明</string>
     <string name="agreements_agree">我已阅读并同意以上内容</string>
     <string name="under_construction" translatable="false">Under Construction</string>

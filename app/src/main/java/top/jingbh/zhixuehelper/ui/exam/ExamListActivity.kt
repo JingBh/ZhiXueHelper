@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
+import androidx.paging.filter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
 import top.jingbh.zhixuehelper.BuildConfig
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.Exam
+import top.jingbh.zhixuehelper.data.exam.ExamType
 import top.jingbh.zhixuehelper.databinding.ActivityExamListBinding
 import top.jingbh.zhixuehelper.ui.auth.LoginActivity
 import top.jingbh.zhixuehelper.ui.misc.AboutActivity
@@ -50,6 +52,12 @@ class ExamListActivity : AppCompatActivity() {
 
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.filter_weekly -> viewModel.filterExamType(ExamType.WEEKLY)
+                R.id.filter_monthly -> viewModel.filterExamType(ExamType.MONTHLY)
+                R.id.filter_midterm -> viewModel.filterExamType(ExamType.MIDTERM)
+                R.id.filter_terminal -> viewModel.filterExamType(ExamType.TERMINAL)
+                R.id.filter_others -> viewModel.filterExamType(ExamType.OTHERS)
+
                 R.id.switch_account -> toLogin()
                 R.id.about -> {
                     val intent = Intent(this, AboutActivity::class.java)
@@ -77,8 +85,41 @@ class ExamListActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            viewModel.pagingFlow.collectLatest { pagingData ->
-                adapter.submitData(pagingData)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState
+                    .map { it.examTypes }
+                    .collectLatest { types ->
+                        binding.topAppBar.menu.apply {
+                            findItem(R.id.filter_weekly).isChecked =
+                                types.contains(ExamType.WEEKLY)
+                            findItem(R.id.filter_monthly).isChecked =
+                                types.contains(ExamType.MONTHLY)
+                            findItem(R.id.filter_midterm).isChecked =
+                                types.contains(ExamType.MIDTERM)
+                            findItem(R.id.filter_terminal).isChecked =
+                                types.contains(ExamType.TERMINAL)
+                            findItem(R.id.filter_others).isChecked =
+                                types.contains(ExamType.OTHERS)
+                        }
+                    }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val typesFlow = viewModel.uiState
+                    .map { it.examTypes }
+                    .distinctUntilChanged()
+
+                viewModel.pagingFlow
+                    .combine(typesFlow) { pagingData, types ->
+                        if (types.isNotEmpty()) {
+                            pagingData.filter { types.contains(it.type) }
+                        } else pagingData
+                    }
+                    .collectLatest { pagingData ->
+                        adapter.submitData(pagingData)
+                    }
             }
         }
 
