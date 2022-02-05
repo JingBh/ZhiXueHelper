@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.*
 
 plugins {
     id("com.android.application")
@@ -24,10 +25,28 @@ android {
         buildConfigField("Boolean", "IS_STABLE", "false")
     }
 
+    signingConfigs {
+        val keystore = rootProject.file("signing.properties")
+        if (keystore.exists()) {
+            create("release") {
+                val prop = Properties().apply {
+                    keystore.inputStream().use(this::load)
+                }
+
+                storeFile = rootProject.file(prop.getProperty("keystore.path")!!)
+                storePassword = prop.getProperty("keystore.password")!!
+                keyAlias = prop.getProperty("key.alias")!!
+                keyPassword = prop.getProperty("key.password")!!
+            }
+        }
+    }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
+
+            signingConfig = signingConfigs.getByName("release")
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

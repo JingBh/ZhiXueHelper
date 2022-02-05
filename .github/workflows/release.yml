@@ -1,0 +1,66 @@
+name: Build Release Assets
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Setup signing
+        shell: bash
+        env:
+          SIGNING_KEYSTORE: ${{ secrets.SIGNING_KEYSTORE }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: |
+          echo "$SIGNING_KEYSTORE" | base64 -d > keystore.jks
+          echo "keystore.path=keystore.jks" > signing.properties
+          echo "keystore.password=$SIGNING_PASSWORD" >> signing.properties
+          echo "key.alias=JingBh" >> signing.properties
+          echo "key.password=$SIGNING_PASSWORD" >> signing.properties
+
+      - name: Prepare Gradle
+        run: chmod +x ./gradlew
+
+      - name: Build release APK
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: wrapper
+          arguments: :app:assembleRelease
+
+      - name: Setup Git
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
+      - name: Upload assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REF: ${{ github.ref_name }}
+        run: gh release upload $REF app/build/outputs/apk/release/*
+
+      - name: Upload mapping
+        uses: actions/upload-artifact@v2
+        with:
+          name: mapping.txt
+          path: app/build/outputs/mapping/release/mapping.txt
+
+      - name: Push assets to `release` branch
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: release
+          FOLDER: app/build/outputs/apk/release
+          MESSAGE: "release ${{ github.ref_name }}"
+          SQUASH_HISTORY: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
