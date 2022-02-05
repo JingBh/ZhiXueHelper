@@ -1,50 +1,34 @@
 package top.jingbh.zhixuehelper.ui.exam
 
 import android.net.Uri
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.NetworkImageView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.textview.MaterialTextView
-import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONArray
 import org.json.JSONTokener
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.ExamPaperTopic
 import top.jingbh.zhixuehelper.data.exam.ExamPaperTopicType
-import top.jingbh.zhixuehelper.data.util.CustomRequestQueue
-import top.jingbh.zhixuehelper.databinding.FragmentPaperAnalysisTopicBinding
+import top.jingbh.zhixuehelper.databinding.ItemPaperAnalysisTopicBinding
 import top.jingbh.zhixuehelper.ui.util.emitDigits
-import javax.inject.Inject
 
-@AndroidEntryPoint
-class PaperAnalysisTopicFragment : Fragment() {
-    @Inject
-    lateinit var requestQueue: CustomRequestQueue
+class PaperAnalysisTopicViewHolder private constructor(
+    private val binding: ItemPaperAnalysisTopicBinding
+) : RecyclerView.ViewHolder(binding.root) {
+    private lateinit var layoutInflater: LayoutInflater
 
-    private lateinit var binding: FragmentPaperAnalysisTopicBinding
+    private lateinit var imageLoader: ImageLoader
 
-    private lateinit var topic: ExamPaperTopic
+    private val context = binding.root.context
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        topic = arguments?.getSerializable(ARGUMENT_PAPER_TOPIC) as ExamPaperTopic
-
-        binding = FragmentPaperAnalysisTopicBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.title.text = getString(R.string.paper_topic_title, topic.id)
+    fun bind(topic: ExamPaperTopic) {
+        binding.title.text = context.getString(R.string.paper_topic_title, topic.id)
 
         binding.userAnswerCard.apply {
             val answerLayout = when (topic.type) {
@@ -64,9 +48,9 @@ class PaperAnalysisTopicFragment : Fragment() {
                 binding.userAnswerCard.apply {
                     findViewById<MaterialTextView>(R.id.answerText).text =
                         if (topic.userAnswer == "X") {
-                            getString(R.string.paper_topic_answer_not_selected)
+                            context.getString(R.string.paper_topic_answer_not_selected)
                         } else if (topic.userAnswer.isBlank()) {
-                            getString(R.string.paper_topic_answer_not_filled)
+                            context.getString(R.string.paper_topic_answer_not_filled)
                         } else topic.userAnswer
                 }
             }
@@ -90,7 +74,8 @@ class PaperAnalysisTopicFragment : Fragment() {
                                 )
                             )
 
-                            imageView.setImageUrl(imagesJson.getString(i), requestQueue.imageLoader)
+                            imageView.setDefaultImageResId(R.drawable.placeholder)
+                            imageView.setImageUrl(imagesJson.getString(i), imageLoader)
                         }
                     }
             }
@@ -123,7 +108,8 @@ class PaperAnalysisTopicFragment : Fragment() {
                             )
                         )
 
-                        imageView.setImageUrl(topic.standardAnswer, requestQueue.imageLoader)
+                        imageView.setDefaultImageResId(R.drawable.placeholder)
+                        imageView.setImageUrl(topic.standardAnswer, imageLoader)
                     }
                 } else {
                     // not url
@@ -158,6 +144,16 @@ class PaperAnalysisTopicFragment : Fragment() {
     }
 
     companion object {
-        const val ARGUMENT_PAPER_TOPIC = "top.jingbh.zhixuehelper.argument.PAPER_TOPIC"
+        fun create(
+            layoutInflater: LayoutInflater,
+            parent: ViewGroup,
+            imageLoader: ImageLoader
+        ): PaperAnalysisTopicViewHolder {
+            val binding = ItemPaperAnalysisTopicBinding.inflate(layoutInflater, parent, false)
+            val viewHolder = PaperAnalysisTopicViewHolder(binding)
+            viewHolder.layoutInflater = layoutInflater
+            viewHolder.imageLoader = imageLoader
+            return viewHolder
+        }
     }
 }

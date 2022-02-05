@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.ExamPaper
 import top.jingbh.zhixuehelper.data.util.CustomRequestQueue
 import top.jingbh.zhixuehelper.databinding.FragmentPaperDetailsBinding
@@ -93,6 +94,7 @@ class PaperDetailsFragment : Fragment() {
                                 )
                             )
 
+                            imageView.setDefaultImageResId(R.drawable.placeholder)
                             imageView.setImageUrl(uri.toString(), requestQueue.imageLoader)
                         }
                     }
