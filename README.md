@@ -11,7 +11,12 @@
 
 ## Downloads
 
+- [CDN](https://cdn.jsdelivr.net/gh/JingBh/ZhiXueHelper@release/)
 - [Releases](https://github.com/JingBh/ZhiXueHelper/releases/latest)
+
+打开后请选择 `.apk` 后缀的文件下载。
+
+若您访问 GitHub 速度较慢，可以选用 **CDN** 链接。请注意，**CDN** 链接仅支持下载最新版本。
 
 ## Progress
 
