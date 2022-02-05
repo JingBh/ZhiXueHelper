@@ -13,8 +13,7 @@
 
         <activity
             android:name=".ui.exam.ExamListActivity"
-            android:exported="true"
-            android:launchMode="singleTask">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
