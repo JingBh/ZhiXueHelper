@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.Spanned
 import androidx.core.text.HtmlCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.math.BigInteger
 import javax.inject.Inject
 
 class Agreements @Inject constructor(
@@ -18,13 +19,26 @@ class Agreements @Inject constructor(
 
     fun isAgreementsAgreed(): Boolean {
         val file = context.filesDir.resolve(".agreements-agreed")
-        return file.exists()
+        return if (file.exists()) {
+            val content = file.readBytes()
+            val version = try {
+                BigInteger(content).toInt()
+            } catch (e: NumberFormatException) {
+                1
+            }
+            version >= AGREEMENTS_VERSION
+        } else false
     }
 
     fun agreeAgreements() {
         val file = getAgreementsAgreedFile()
         if (!file.exists()) file.createNewFile()
+        file.writeBytes(BigInteger.valueOf(AGREEMENTS_VERSION.toLong()).toByteArray())
     }
 
     private fun getAgreementsAgreedFile() = context.filesDir.resolve(".agreements-agreed")
+
+    companion object {
+        const val AGREEMENTS_VERSION: Int = 1
+    }
 }
