@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import androidx.appcompat.app.AppCompatActivity
+import com.microsoft.appcenter.analytics.Analytics
 import dagger.hilt.android.AndroidEntryPoint
 import top.jingbh.zhixuehelper.databinding.ActivityAgreementsBinding
 import top.jingbh.zhixuehelper.ui.exam.ExamListActivity
@@ -34,6 +35,8 @@ class AgreementsActivity : AppCompatActivity() {
         binding.nextButton.setOnClickListener {
             if (binding.checkbox.isChecked) {
                 agreements.agreeAgreements()
+
+                Analytics.setEnabled(true)
 
                 val intent = Intent(this, ExamListActivity::class.java)
                 startActivity(intent)

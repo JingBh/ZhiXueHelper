@@ -16,13 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.lists.TwoLineItemMetaTextViewHolder
 import com.google.android.material.snackbar.Snackbar
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
-import com.microsoft.appcenter.crashes.Crashes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import top.jingbh.zhixuehelper.BuildConfig
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.Exam
 import top.jingbh.zhixuehelper.data.exam.ExamType
@@ -137,8 +133,6 @@ class ExamListActivity : AppCompatActivity() {
                 }
             }
         }
-
-        if (!BuildConfig.DEBUG) initAppCenter()
     }
 
     override fun onResume() {
@@ -155,15 +149,6 @@ class ExamListActivity : AppCompatActivity() {
         startActivity(intent)
 
         if (finish) finish()
-    }
-
-    private fun initAppCenter() {
-        AppCenter.start(
-            application,
-            "d87cf6b8-ef94-4741-a14a-5c31e1ab0037",
-            Analytics::class.java,
-            Crashes::class.java
-        )
     }
 
     private inner class Adapter : PagingDataAdapter<Exam, TwoLineItemMetaTextViewHolder>(

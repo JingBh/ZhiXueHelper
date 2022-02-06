@@ -6,6 +6,9 @@ import android.content.Intent
 import android.os.Bundle
 import com.android.volley.VolleyLog
 import com.google.android.material.color.DynamicColors
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import dagger.hilt.android.HiltAndroidApp
 import top.jingbh.zhixuehelper.ui.misc.AgreementsActivity
 import top.jingbh.zhixuehelper.ui.util.Agreements
@@ -21,6 +24,7 @@ class Application : Application() {
         super.onCreate()
 
         initAgreements()
+        initAppCenter()
         initDynamicColors()
         initDebug()
     }
@@ -53,6 +57,17 @@ class Application : Application() {
 
             override fun onActivityDestroyed(activity: Activity) {}
         })
+    }
+
+    private fun initAppCenter() {
+        AppCenter.configure(this, "d87cf6b8-ef94-4741-a14a-5c31e1ab0037")
+
+        if (!BuildConfig.DEBUG) {
+            AppCenter.start(Crashes::class.java)
+            AppCenter.start(Analytics::class.java)
+        }
+
+        Analytics.setEnabled(agreements.isAgreementsAgreed())
     }
 
     private fun initDynamicColors() {
