@@ -190,19 +190,32 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/viewSource"
+                android:id="@+id/checkUpdate"
                 style="@style/Widget.Material3.Button.TonalButton.Icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/update_check"
+                app:icon="@drawable/ic_round_update_24"
+                app:layout_constraintBottom_toTopOf="@id/viewSource"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/about"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewSource"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/view_source"
+                style="@style/Widget.Material3.Button.TonalButton.Icon"
                 app:icon="@drawable/devicon_github_original_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/about"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

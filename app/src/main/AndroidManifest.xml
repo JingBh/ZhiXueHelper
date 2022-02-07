@@ -57,6 +57,11 @@
 
         <activity android:name=".ui.misc.AgreementsActivity" />
 
+        <service
+            android:name=".service.UpdateService"
+            android:description="@string/update_service"
+            android:exported="false" />
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

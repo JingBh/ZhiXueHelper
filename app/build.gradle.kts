@@ -16,8 +16,8 @@ android {
         applicationId = "top.jingbh.zhixuehelper"
         minSdk = 23
         targetSdk = 31
-        versionCode = 2
-        versionName = "0.2.0"
+        versionCode = 3
+        versionName = "0.2.1"
         setProperty("archivesBaseName", "ZhiXueHelper-${versionName}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -103,6 +103,7 @@ dependencies {
     implementation("com.microsoft.appcenter:appcenter-analytics:4.4.2")
     implementation("com.microsoft.appcenter:appcenter-crashes:4.4.2")
     implementation("io.github.reactivecircus.cache4k:cache4k:0.4.0")
+    implementation("io.noties.markwon:core:4.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 
     kapt("com.google.dagger:hilt-android-compiler:2.40.5")
