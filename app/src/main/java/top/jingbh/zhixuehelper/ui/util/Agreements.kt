@@ -36,6 +36,11 @@ class Agreements @Inject constructor(
         file.writeBytes(BigInteger.valueOf(AGREEMENTS_VERSION.toLong()).toByteArray())
     }
 
+    fun disagreeAgreements() {
+        val file = getAgreementsAgreedFile()
+        if (file.exists()) file.delete()
+    }
+
     private fun getAgreementsAgreedFile() = context.filesDir.resolve(".agreements-agreed")
 
     companion object {

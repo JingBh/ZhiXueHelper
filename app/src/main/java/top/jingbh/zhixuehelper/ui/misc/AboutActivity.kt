@@ -59,6 +59,12 @@ class AboutActivity : AppCompatActivity() {
 
         binding.version.text = "Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 
+        binding.viewAgreements.setOnClickListener {
+            val intent = Intent(this, AgreementsActivity::class.java)
+
+            startActivity(intent)
+        }
+
         if (BuildConfig.DEBUG) {
             binding.checkUpdate.isEnabled = false
         } else binding.checkUpdate.setOnClickListener {

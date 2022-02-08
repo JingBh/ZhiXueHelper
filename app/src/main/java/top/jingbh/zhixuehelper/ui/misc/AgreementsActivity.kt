@@ -6,6 +6,7 @@ import android.text.method.LinkMovementMethod
 import androidx.appcompat.app.AppCompatActivity
 import com.microsoft.appcenter.analytics.Analytics
 import dagger.hilt.android.AndroidEntryPoint
+import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.databinding.ActivityAgreementsBinding
 import top.jingbh.zhixuehelper.ui.exam.ExamListActivity
 import top.jingbh.zhixuehelper.ui.util.Agreements
@@ -28,20 +29,38 @@ class AgreementsActivity : AppCompatActivity() {
         binding.content.movementMethod = LinkMovementMethod.getInstance()
         binding.content.text = html
 
-        binding.checkbox.setOnCheckedChangeListener { _, isChecked ->
-            binding.nextButton.isEnabled = isChecked
-        }
+        val beforeAgreed = agreements.isAgreementsAgreed()
+        binding.checkbox.isChecked = beforeAgreed
 
-        binding.nextButton.setOnClickListener {
-            if (binding.checkbox.isChecked) {
-                agreements.agreeAgreements()
+        if (beforeAgreed) {
+            binding.nextButton.setText(R.string.save)
+            binding.nextButton.isEnabled = true
 
-                Analytics.setEnabled(true)
+            binding.nextButton.setOnClickListener {
+                if (!binding.checkbox.isChecked) {
+                    agreements.disagreeAgreements()
 
-                val intent = Intent(this, ExamListActivity::class.java)
-                startActivity(intent)
+                    Analytics.setEnabled(false)
+                }
 
                 finish()
+            }
+        } else {
+            binding.checkbox.setOnCheckedChangeListener { _, isChecked ->
+                binding.nextButton.isEnabled = isChecked
+            }
+
+            binding.nextButton.setOnClickListener {
+                if (binding.checkbox.isChecked) {
+                    agreements.agreeAgreements()
+
+                    Analytics.setEnabled(true)
+
+                    val intent = Intent(this, ExamListActivity::class.java)
+                    startActivity(intent)
+
+                    finish()
+                }
             }
         }
     }
