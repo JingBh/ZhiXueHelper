@@ -60,7 +60,7 @@ class AboutActivity : AppCompatActivity() {
         binding.version.text = "Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 
         if (BuildConfig.DEBUG) {
-            binding.checkUpdate.visibility = View.GONE
+            binding.checkUpdate.isEnabled = false
         } else binding.checkUpdate.setOnClickListener {
             binder.checkUpdate(this, false)
         }
