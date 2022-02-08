@@ -13,7 +13,7 @@ interface ReleaseApi {
 @InstallIn(SingletonComponent::class)
 abstract class ReleaseApiModule {
     @Binds
-    abstract fun bindGitHubWebService(
+    abstract fun bindReleaseApi(
         gitHubWebService: GitHubWebService
     ): ReleaseApi
 }

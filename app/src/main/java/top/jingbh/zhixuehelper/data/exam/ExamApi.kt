@@ -21,7 +21,7 @@ interface ExamApi {
 @InstallIn(ViewModelComponent::class)
 abstract class ExamApiModule {
     @Binds
-    abstract fun bindExamWebService(
+    abstract fun bindExamApi(
         examWebService: ExamWebService
     ): ExamApi
 }

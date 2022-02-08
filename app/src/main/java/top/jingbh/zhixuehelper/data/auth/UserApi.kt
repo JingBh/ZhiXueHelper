@@ -13,7 +13,7 @@ interface UserApi {
 @InstallIn(ViewModelComponent::class)
 abstract class UserApiModule {
     @Binds
-    abstract fun bindUserWebService(
+    abstract fun bindUserApi(
         userWebService: UserWebService
     ): UserApi
 }
