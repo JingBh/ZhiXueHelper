@@ -9,15 +9,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.*
+import android.webkit.CookieManager
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import top.jingbh.zhixuehelper.databinding.FragmentLoginWebviewBinding
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @SuppressLint("SetJavaScriptEnabled", "SourceLockedOrientationActivity")
 class MethodWebviewFragment : Fragment() {
+    @Inject
+    lateinit var cookieManager: CookieManager
+
     private lateinit var binding: FragmentLoginWebviewBinding
 
     private val loginViewModel: LoginViewModel by activityViewModels()
@@ -57,29 +64,26 @@ class MethodWebviewFragment : Fragment() {
                     isReload: Boolean
                 ) {
                     if (Uri.parse(url).path?.startsWith("/container/container") == true) {
-                        Log.d(TAG, "Login succeed")
-                        evaluateJavascript(jsFindToken()) {}
+                        Log.d(TAG, "login succeed")
+
+                        val cookie = findCookie()
+                        cookieManager.removeAllCookies {}
+
+                        if (!cookie.isNullOrBlank()) {
+                            Log.d(TAG, "found cookie: $cookie")
+                            loginViewModel.updateCookie(cookie)
+                        }
                     }
 
                     super.doUpdateVisitedHistory(view, url, isReload)
                 }
             }
 
-            val cookieManager = CookieManager.getInstance()
             cookieManager.setAcceptThirdPartyCookies(this, true)
 
             settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
-
-            addJavascriptInterface(object {
-                @JavascriptInterface
-                fun submitToken(token: String) {
-                    Log.d(TAG, "Received token: $token")
-                    cookieManager.removeAllCookies {}
-                    if (token.isNotBlank()) loginViewModel.updateToken(token)
-                }
-            }, "Android")
 
             loadUrl("https://www.zhixue.com/wap_login.html")
         }
@@ -93,13 +97,16 @@ class MethodWebviewFragment : Fragment() {
         }
     }
 
-    private fun jsFindToken(): String {
-        val inputStream = requireContext().assets.open("js/findToken.js")
-        val reader = inputStream.bufferedReader()
-        val js = reader.readText()
-        reader.close()
-        inputStream.close()
-        return js
+    private fun findCookie(): String? {
+        return try {
+            cookieManager.getCookie("https://www.zhixue.com/")
+                .split(';')
+                .map { it.trim() }
+                .map { it.split('=') }
+                .first { it[0] == "tlsysSessionId" }[1]
+        } catch (e: NoSuchElementException) {
+            null
+        }
     }
 
     companion object {

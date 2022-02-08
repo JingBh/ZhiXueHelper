@@ -24,6 +24,8 @@ class UserNetworkDataSource @Inject constructor(
         } else userId
     }
 
+    suspend fun getToken(cookie: String) = userApi.getToken(cookie)
+
     companion object {
         private val userIdsMutex = Mutex()
 

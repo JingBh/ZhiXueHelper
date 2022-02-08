@@ -1,18 +1,18 @@
-package top.jingbh.zhixuehelper.data.util
+package top.jingbh.zhixuehelper.data.util.zhixue
 
 import org.json.JSONObject
 import org.json.JSONTokener
 
-data class ZhiXueResponse(
+data class JSONResponse(
     val errorCode: Int,
     val errorInfo: String,
     val result: JSONObject?
 ) {
     companion object {
-        fun ofJson(jsonObject: JSONObject): ZhiXueResponse {
+        fun ofJson(jsonObject: JSONObject): JSONResponse {
             val errorCode = jsonObject.optInt("errorCode", 1)
 
-            return ZhiXueResponse(
+            return JSONResponse(
                 errorCode,
                 jsonObject.optString("errorInfo", "Failed to decode JSON"),
                 if (errorCode == 0) {

@@ -1,59 +1,45 @@
 package top.jingbh.zhixuehelper.data.auth
 
-import android.util.Log
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import top.jingbh.zhixuehelper.BuildConfig
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
-    private val tokenLocalDataSource: TokenLocalDataSource,
+    private val tokenRepository: TokenRepository,
+    private val cookieRepository: CookieRepository,
     private val userNetworkDataSource: UserNetworkDataSource
 ) {
-    private val tokenMutex = Mutex()
+    suspend fun getToken() = tokenRepository.getToken()
 
-    private var token: String? = null
+    suspend fun setToken(newToken: String) = tokenRepository.setToken(newToken)
 
-    suspend fun getToken(): String? {
-        var currentToken = tokenMutex.withLock {
-            token
-        }
+    private suspend fun getCookie() = cookieRepository.getCookie()
 
-        if (currentToken == null) {
-            currentToken = tokenLocalDataSource.fetchToken()
-            tokenMutex.withLock {
-                token = currentToken
-            }
+    suspend fun setCookie(newCookie: String) {
+        cookieRepository.setCookie(newCookie)
 
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Our token: $currentToken")
-            }
-        }
-
-        return token
+        requestToken()
     }
 
-    suspend fun setToken(newToken: String) {
-        tokenMutex.withLock {
-            token = newToken
-        }
-
-        Log.d(TAG, "New token set: $newToken")
-
-        tokenLocalDataSource.putToken(newToken)
-    }
+    suspend fun clearCookie() = cookieRepository.clearCookie()
 
     suspend fun isLoggedIn(): Boolean {
-        getToken()
-        val token = tokenMutex.withLock {
-            token
-        } ?: return false
+        val token = getToken() ?: return if (requestToken()) isLoggedIn() else false
 
         val userId = userNetworkDataSource.getUserId(token)
         return userId != null
     }
 
-    companion object {
-        private const val TAG = "UserRepository"
+    private suspend fun requestToken(): Boolean {
+        val cookie = getCookie()
+        if (cookie != null) {
+            val newToken = userNetworkDataSource.getToken(cookie)
+
+            if (newToken != null) {
+                setToken(newToken)
+
+                return true
+            } else clearCookie()
+        }
+
+        return false
     }
 }

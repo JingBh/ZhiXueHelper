@@ -6,6 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 
 interface UserApi {
+    suspend fun getToken(cookie: String): String?
+
     suspend fun getUserId(token: String): String?
 }
 

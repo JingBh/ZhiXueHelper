@@ -8,7 +8,7 @@ import org.json.JSONTokener
 import top.jingbh.zhixuehelper.data.subject.Subject
 import top.jingbh.zhixuehelper.data.util.CustomRequestQueue
 import top.jingbh.zhixuehelper.data.util.Pagination
-import top.jingbh.zhixuehelper.data.util.ZhiXueRequest
+import top.jingbh.zhixuehelper.data.util.zhixue.TokenRequest
 import java.util.*
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -22,8 +22,7 @@ class ExamWebService @Inject constructor(
         pageIndex: Int,
         pageSize: Int
     ): Pagination<Exam> = suspendCoroutine { continuation ->
-        val request = ZhiXueRequest(token, Request.Method.POST, {
-            appendPath("zhixuebao")
+        val request = TokenRequest(token, Request.Method.POST, {
             appendPath("report")
             appendPath("getPageAllExamList")
             appendQueryParameter("reportType", "exam")
@@ -63,8 +62,7 @@ class ExamWebService @Inject constructor(
         token: String,
         exam: Exam
     ): List<ExamPaper> = suspendCoroutine { continuation ->
-        val request = ZhiXueRequest(token, Request.Method.GET, {
-            appendPath("zhixuebao")
+        val request = TokenRequest(token, Request.Method.GET, {
             appendPath("report")
             appendPath("exam")
             appendPath("getReportMain")
@@ -109,8 +107,7 @@ class ExamWebService @Inject constructor(
         token: String,
         paper: ExamPaper
     ): List<Uri> = suspendCoroutine { continuation ->
-        val request = ZhiXueRequest(token, Request.Method.GET, {
-            appendPath("zhixuebao")
+        val request = TokenRequest(token, Request.Method.GET, {
             appendPath("report")
             appendPath("paper")
             appendPath("getCheckSheet")
@@ -140,8 +137,7 @@ class ExamWebService @Inject constructor(
         token: String,
         paper: ExamPaper
     ): List<ExamPaperTopic> = suspendCoroutine { continuation ->
-        val request = ZhiXueRequest(token, Request.Method.GET, {
-            appendPath("zhixuebao")
+        val request = TokenRequest(token, Request.Method.GET, {
             appendPath("report")
             appendPath("getPaperAnalysis")
             appendQueryParameter("paperId", paper.id)

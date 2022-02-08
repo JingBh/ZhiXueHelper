@@ -9,3 +9,5 @@ import androidx.datastore.preferences.preferencesDataStore
 val Context.authDataStore: DataStore<Preferences> by preferencesDataStore(name = "auth")
 
 val KEY_TOKEN = stringPreferencesKey("token")
+
+val KEY_COOKIE = stringPreferencesKey("cookie")

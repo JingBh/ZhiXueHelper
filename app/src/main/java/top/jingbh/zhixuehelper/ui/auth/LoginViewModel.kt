@@ -31,11 +31,28 @@ class LoginViewModel @Inject constructor(
     fun updateToken(newToken: String, isImported: Boolean = false) {
         viewModelScope.launch {
             userRepository.setToken(newToken)
+            userRepository.clearCookie()
 
             _uiState.update { state ->
                 state.copy(
                     isLoggedIn = false,
                     isImported = isImported,
+                    errorMessage = null
+                )
+            }
+
+            checkIsLoggedIn()
+        }
+    }
+
+    fun updateCookie(newCookie: String) {
+        viewModelScope.launch {
+            userRepository.setCookie(newCookie)
+
+            _uiState.update { state ->
+                state.copy(
+                    isLoggedIn = false,
+                    isImported = false,
                     errorMessage = null
                 )
             }
