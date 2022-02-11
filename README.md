@@ -32,6 +32,9 @@ Currently in active development.
 
 ## Credits
 
+- This project won't be possible
+  without [NVISOsecurity/MagiskTrustUserCerts](https://github.com/NVISOsecurity/MagiskTrustUserCerts)
+- UI Designed using Google's [Material Design 3](https://m3.material.io/)
 - App icon designed
   by [@zhc7](https://github.com/zhc7) ([`aaf852d`](https://github.com/JingBh/ZhiXueHelper/commit/aaf852df0eb9226db2d286beec54050cda4c8a78))
 - Analytics via [Microsoft AppCenter](https://appcenter.ms/)
