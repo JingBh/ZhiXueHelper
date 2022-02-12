@@ -25,6 +25,7 @@
     <string name="agreements_agree">我已阅读并同意以上内容</string>
     <string name="under_construction" translatable="false">Under Construction</string>
     <string name="under_construction_help">此功能还未完成。</string>
+    <string name="data_empty">暂无数据</string>
     <string name="build_unstable">此版本是测试版</string>
     <string name="build_unstable_help">测试版可能不稳定、功能不全，且存在一定问题。</string>
     <string name="build_debug">诶？这个图标背景怎么是黑的</string>

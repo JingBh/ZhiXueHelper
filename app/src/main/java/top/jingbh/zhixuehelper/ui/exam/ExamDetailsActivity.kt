@@ -11,11 +11,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.Exam
 import top.jingbh.zhixuehelper.databinding.ActivityExamDetailsBinding
+import top.jingbh.zhixuehelper.ui.util.EmptyFragment
 
 @AndroidEntryPoint
 class ExamDetailsActivity : AppCompatActivity() {
@@ -62,6 +66,9 @@ class ExamDetailsActivity : AppCompatActivity() {
             viewModel.papers
                 .distinctUntilChanged()
                 .collectLatest { papers ->
+                    binding.tabLayout.visibility =
+                        if (papers.isEmpty()) View.GONE else View.VISIBLE
+
                     adapter = object : FragmentStateAdapter(this@ExamDetailsActivity) {
                         override fun getItemCount(): Int {
                             val count = papers.count()
@@ -69,15 +76,18 @@ class ExamDetailsActivity : AppCompatActivity() {
                         }
 
                         override fun createFragment(position: Int): Fragment {
-                            val fragment = PaperDetailsFragment()
-                            fragment.arguments = Bundle().apply {
-                                putSerializable(
-                                    PaperDetailsFragment.ARGUMENT_PAPER,
-                                    papers[position]
-                                )
+                            return if (papers.isEmpty()) {
+                                EmptyFragment()
+                            } else {
+                                PaperDetailsFragment().apply {
+                                    arguments = Bundle().apply {
+                                        putSerializable(
+                                            PaperDetailsFragment.ARGUMENT_PAPER,
+                                            papers[position]
+                                        )
+                                    }
+                                }
                             }
-
-                            return fragment
                         }
                     }
 
