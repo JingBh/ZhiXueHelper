@@ -125,19 +125,6 @@ class PaperAnalysisActivity : AppCompatActivity() {
             }
         }
 
-        /*lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState
-                    .map { it.selectedIndex }
-                    .filter { it >= 0 }
-                    .distinctUntilChanged()
-                    .collectLatest {
-                        indexAdapter.notifyItemChanged(it)
-                        binding.list.smoothScrollToPosition(it)
-                    }
-            }
-        }*/
-
         lifecycleScope.launch {
             viewModel.analysis
                 .collectLatest { analysis ->
@@ -214,14 +201,21 @@ class PaperAnalysisActivity : AppCompatActivity() {
         private val binding: ItemPaperAnalysisIndexBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(topic: ExamPaperTopic, selected: Boolean = false) {
-            binding.text.text = topic.id.toString()
-            binding.text.setTextColor(
-                when (topic.getCorrectness()) {
-                    ExamPaperTopic.Correctness.CORRECT -> colorCorrectRoles.accent
-                    ExamPaperTopic.Correctness.HALF_CORRECT -> colorHalfCorrectRoles.accent
-                    ExamPaperTopic.Correctness.WRONG -> colorWrongRoles.accent
+            binding.text.apply {
+                text = topic.title.let { title ->
+                    if (title.length > 2) {
+                        title.substring(0, 2)
+                    } else title
                 }
-            )
+
+                setTextColor(
+                    when (topic.getCorrectness()) {
+                        ExamPaperTopic.Correctness.CORRECT -> colorCorrectRoles.accent
+                        ExamPaperTopic.Correctness.HALF_CORRECT -> colorHalfCorrectRoles.accent
+                        ExamPaperTopic.Correctness.WRONG -> colorWrongRoles.accent
+                    }
+                )
+            }
 
             binding.root.isSelected = selected
             if (!selected) binding.root.setOnClickListener {

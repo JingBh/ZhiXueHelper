@@ -28,7 +28,7 @@ class PaperAnalysisTopicViewHolder private constructor(
     private val context = binding.root.context
 
     fun bind(topic: ExamPaperTopic) {
-        binding.title.text = context.getString(R.string.paper_topic_title, topic.id)
+        binding.title.text = context.getString(R.string.paper_topic_title, topic.title)
 
         binding.userAnswerCard.apply {
             val answerLayout = when (topic.type) {
