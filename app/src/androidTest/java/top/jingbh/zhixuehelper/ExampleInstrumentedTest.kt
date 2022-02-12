@@ -15,8 +15,12 @@ import org.junit.runner.RunWith
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
+        val packageName = if (BuildConfig.DEBUG) {
+            "top.jingbh.zhixuehelper.debug"
+        } else "top.jingbh.zhixuehelper"
+
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("top.jingbh.zhixuehelper", appContext.packageName)
+        assertEquals(packageName, appContext.packageName)
     }
 }

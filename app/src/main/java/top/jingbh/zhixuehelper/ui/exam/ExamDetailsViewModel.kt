@@ -32,7 +32,15 @@ class ExamDetailsViewModel @Inject constructor(
 
             val token = userRepository.getToken()
             val result = if (token != null) {
-                examRepository.getExamPaperList(token, exam)
+                try {
+                    examRepository.getExamPaperList(token, exam)
+                } catch (e: Exception) {
+                    _uiState.update { state ->
+                        state.copy(isFailed = true)
+                    }
+
+                    null
+                }
             } else null
 
             _uiState.update { state ->
@@ -49,6 +57,7 @@ class ExamDetailsViewModel @Inject constructor(
     }
 
     data class ExamDetailsUiState(
-        val isLoading: Boolean = false
+        val isLoading: Boolean = false,
+        val isFailed: Boolean = false
     )
 }

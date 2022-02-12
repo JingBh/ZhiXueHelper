@@ -12,6 +12,7 @@ import top.jingbh.zhixuehelper.data.util.zhixue.TokenRequest
 import java.util.*
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class ExamWebService @Inject constructor(
@@ -52,7 +53,7 @@ class ExamWebService @Inject constructor(
             continuation.resume(Pagination(pageIndex, result, pageSize, totalPages))
         }, { error ->
             Log.e(TAG, "Request exam list failed", error)
-            throw error
+            continuation.resumeWithException(error)
         })
 
         requestQueue.addToRequestQueue(request)
@@ -97,7 +98,7 @@ class ExamWebService @Inject constructor(
             continuation.resume(result)
         }, { error ->
             Log.e(TAG, "Request exam paper list failed", error)
-            throw error
+            continuation.resumeWithException(error)
         })
 
         requestQueue.addToRequestQueue(request)
@@ -127,7 +128,7 @@ class ExamWebService @Inject constructor(
             continuation.resume(result)
         }, { error ->
             Log.e(TAG, "Request exam paper sheet images failed", error)
-            throw error
+            continuation.resumeWithException(error)
         })
 
         requestQueue.addToRequestQueue(request)
@@ -178,7 +179,7 @@ class ExamWebService @Inject constructor(
             continuation.resume(result)
         }, { error ->
             Log.e(TAG, "Request exam paper analysis failed", error)
-            throw error
+            continuation.resumeWithException(error)
         })
 
         requestQueue.addToRequestQueue(request)

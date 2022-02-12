@@ -32,7 +32,15 @@ class PaperAnalysisViewModel @Inject constructor(
 
             val token = userRepository.getToken()
             val result = if (token != null) {
-                examRepository.getExamPaperAnalysis(token, paper)
+                try {
+                    examRepository.getExamPaperAnalysis(token, paper)
+                } catch (e: Exception) {
+                    _uiState.update { state ->
+                        state.copy(isFailed = true)
+                    }
+
+                    null
+                }
             } else null
 
             _uiState.update { state ->
@@ -44,12 +52,6 @@ class PaperAnalysisViewModel @Inject constructor(
         .filterNotNull()
         .map { analysis -> analysis.sortedBy { it.id } }
 
-    fun updateSelectedIndex(selectedIndex: Int) {
-        _uiState.update { state ->
-            state.copy(selectedIndex = selectedIndex)
-        }
-    }
-
     fun initSetPaper(paper: ExamPaper) {
         if (_paper.value?.id != paper.id)
             _paper.tryEmit(paper)
@@ -57,6 +59,6 @@ class PaperAnalysisViewModel @Inject constructor(
 
     data class PaperAnalysisUiState(
         val isLoading: Boolean = false,
-        val selectedIndex: Int = -1
+        val isFailed: Boolean = false
     )
 }
