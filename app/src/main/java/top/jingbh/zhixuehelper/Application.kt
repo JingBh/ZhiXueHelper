@@ -31,23 +31,14 @@ class Application : Application() {
 
     private fun initAgreements() {
         this.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-            override fun onActivityPreCreated(activity: Activity, savedInstanceState: Bundle?) {
-                val isAgreementsActivity =
-                    activity::class.qualifiedName == AgreementsActivity::class.qualifiedName
-                if (!agreements.isAgreementsAgreed() && !isAgreementsActivity) {
-                    val intent = Intent(this@Application, AgreementsActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-
-                    activity.finish()
-                }
-            }
+            override fun onActivityPreCreated(activity: Activity, savedInstanceState: Bundle?) =
+                verifyAgreed(activity)
 
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
 
             override fun onActivityStarted(activity: Activity) {}
 
-            override fun onActivityResumed(activity: Activity) {}
+            override fun onActivityResumed(activity: Activity) = verifyAgreed(activity)
 
             override fun onActivityPaused(activity: Activity) {}
 
@@ -56,6 +47,21 @@ class Application : Application() {
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 
             override fun onActivityDestroyed(activity: Activity) {}
+
+            private fun verifyAgreed(activity: Activity) {
+                val isAgreementsActivity =
+                    activity::class.qualifiedName == AgreementsActivity::class.qualifiedName
+                if (!isAgreementsActivity && !agreements.isAgreementsAgreed()) {
+                    val intent = Intent(activity, AgreementsActivity::class.java)
+                    val flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    intent.addFlags(flags)
+                    startActivity(intent)
+
+                    activity.finish()
+                }
+            }
         })
     }
 

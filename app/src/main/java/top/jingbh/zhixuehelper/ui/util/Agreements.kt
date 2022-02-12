@@ -10,6 +10,8 @@ import javax.inject.Inject
 class Agreements @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
+    private var agreed = false
+
     fun getAgreementsHtml(): Spanned {
         val inputStream = context.resources.assets.open("pages/agreements.html")
         val reader = inputStream.bufferedReader()
@@ -18,32 +20,33 @@ class Agreements @Inject constructor(
     }
 
     fun isAgreementsAgreed(): Boolean {
-        val file = context.filesDir.resolve(".agreements-agreed")
-        return if (file.exists()) {
-            val content = file.readBytes()
-            val version = try {
-                BigInteger(content).toInt()
-            } catch (e: NumberFormatException) {
-                1
-            }
-            version >= AGREEMENTS_VERSION
-        } else false
+        if (!agreed) {
+            val file = getAgreementsAgreedFile()
+            val agreedVersion = if (file.exists()) {
+                val content = file.readBytes()
+                try {
+                    BigInteger(content).toInt()
+                } catch (e: NumberFormatException) {
+                    1
+                }
+            } else 0
+
+            agreed = agreedVersion >= AGREEMENTS_VERSION
+        }
+
+        return agreed
     }
 
     fun agreeAgreements() {
         val file = getAgreementsAgreedFile()
         if (!file.exists()) file.createNewFile()
         file.writeBytes(BigInteger.valueOf(AGREEMENTS_VERSION.toLong()).toByteArray())
-    }
-
-    fun disagreeAgreements() {
-        val file = getAgreementsAgreedFile()
-        if (file.exists()) file.delete()
+        agreed = true
     }
 
     private fun getAgreementsAgreedFile() = context.filesDir.resolve(".agreements-agreed")
 
     companion object {
-        const val AGREEMENTS_VERSION: Int = 1
+        const val AGREEMENTS_VERSION = 1
     }
 }

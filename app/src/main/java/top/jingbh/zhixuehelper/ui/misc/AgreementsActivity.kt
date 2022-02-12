@@ -3,10 +3,10 @@ package top.jingbh.zhixuehelper.ui.misc
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.microsoft.appcenter.analytics.Analytics
 import dagger.hilt.android.AndroidEntryPoint
-import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.databinding.ActivityAgreementsBinding
 import top.jingbh.zhixuehelper.ui.exam.ExamListActivity
 import top.jingbh.zhixuehelper.ui.util.Agreements
@@ -33,18 +33,8 @@ class AgreementsActivity : AppCompatActivity() {
         binding.checkbox.isChecked = beforeAgreed
 
         if (beforeAgreed) {
-            binding.nextButton.setText(R.string.save)
-            binding.nextButton.isEnabled = true
-
-            binding.nextButton.setOnClickListener {
-                if (!binding.checkbox.isChecked) {
-                    agreements.disagreeAgreements()
-
-                    Analytics.setEnabled(false)
-                }
-
-                finish()
-            }
+            binding.checkbox.visibility = View.GONE
+            binding.nextButton.visibility = View.GONE
         } else {
             binding.checkbox.setOnCheckedChangeListener { _, isChecked ->
                 binding.nextButton.isEnabled = isChecked
