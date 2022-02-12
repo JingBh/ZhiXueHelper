@@ -16,8 +16,8 @@ android {
         applicationId = "top.jingbh.zhixuehelper"
         minSdk = 23
         targetSdk = 31
-        versionCode = 3
-        versionName = "0.2.1"
+        versionCode = 4
+        versionName = "0.2.2"
         setProperty("archivesBaseName", "ZhiXueHelper-${versionName}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
