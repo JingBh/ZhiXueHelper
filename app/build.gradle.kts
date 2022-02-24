@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 plugins {
@@ -22,6 +23,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        buildConfigField("String", "COMMIT_HASH", "\"${getCommitHash()}\"")
         buildConfigField("Boolean", "IS_STABLE", "false")
     }
 
@@ -127,4 +129,14 @@ dependencies {
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+}
+
+fun getCommitHash(): String {
+    val output = ByteArrayOutputStream()
+    exec {
+        commandLine("git", "rev-parse", "--short", "HEAD")
+        standardOutput = output
+    }
+
+    return output.toString().trim()
 }

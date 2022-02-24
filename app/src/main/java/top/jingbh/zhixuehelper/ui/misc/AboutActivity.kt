@@ -55,20 +55,23 @@ class AboutActivity : AppCompatActivity() {
 
         if (BuildConfig.DEBUG) {
             binding.debugCard.visibility = View.VISIBLE
-        }
 
-        binding.version.text = "Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+            binding.version.text = "Commit ${BuildConfig.COMMIT_HASH}"
+
+            binding.checkUpdate.isEnabled = false
+        } else {
+            binding.version.text =
+                "Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+
+            binding.checkUpdate.setOnClickListener {
+                binder.checkUpdate(this, false)
+            }
+        }
 
         binding.viewAgreements.setOnClickListener {
             val intent = Intent(this, AgreementsActivity::class.java)
 
             startActivity(intent)
-        }
-
-        if (BuildConfig.DEBUG) {
-            binding.checkUpdate.isEnabled = false
-        } else binding.checkUpdate.setOnClickListener {
-            binder.checkUpdate(this, false)
         }
 
         binding.viewSource.setOnClickListener {
