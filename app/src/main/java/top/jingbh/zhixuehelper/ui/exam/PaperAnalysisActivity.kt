@@ -26,6 +26,7 @@ import top.jingbh.zhixuehelper.data.exam.ExamPaperTopic
 import top.jingbh.zhixuehelper.data.util.CustomRequestQueue
 import top.jingbh.zhixuehelper.databinding.ActivityPaperAnalysisBinding
 import top.jingbh.zhixuehelper.databinding.ItemPaperAnalysisIndexBinding
+import top.jingbh.zhixuehelper.ui.util.TopicTitleMatcher
 import top.jingbh.zhixuehelper.ui.util.VerticalSpaceItemDecoration
 import top.jingbh.zhixuehelper.ui.util.dpToPx
 import javax.inject.Inject
@@ -202,11 +203,7 @@ class PaperAnalysisActivity : AppCompatActivity() {
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(topic: ExamPaperTopic, selected: Boolean = false) {
             binding.text.apply {
-                text = topic.title.let { title ->
-                    if (title.length > 2) {
-                        title.substring(0, 2)
-                    } else title
-                }
+                text = TopicTitleMatcher.of(topic.title).short
 
                 setTextColor(
                     when (topic.getCorrectness()) {

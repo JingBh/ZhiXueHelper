@@ -16,6 +16,7 @@ import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.ExamPaperTopic
 import top.jingbh.zhixuehelper.data.exam.ExamPaperTopicType
 import top.jingbh.zhixuehelper.databinding.ItemPaperAnalysisTopicBinding
+import top.jingbh.zhixuehelper.ui.util.TopicTitleMatcher
 import top.jingbh.zhixuehelper.ui.util.emitDigits
 
 class PaperAnalysisTopicViewHolder private constructor(
@@ -28,7 +29,7 @@ class PaperAnalysisTopicViewHolder private constructor(
     private val context = binding.root.context
 
     fun bind(topic: ExamPaperTopic) {
-        binding.title.text = context.getString(R.string.paper_topic_title, topic.title)
+        binding.title.text = TopicTitleMatcher.of(topic.title).getFormatted(context.resources)
 
         binding.userAnswerCard.apply {
             val answerLayout = when (topic.type) {
