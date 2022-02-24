@@ -51,6 +51,8 @@
     <string name="method_manual_help">如果你正好有一个能用的密钥（格式为 JWT），可以在此输入；否则请选择其它方式。</string>
     <string name="method_webview">通过网页端登录</string>
     <string name="method_webview_help">点击这里在网页端登录后，我们就可以在浏览器中读取你的密钥。</string>
+    <string name="method_webview_role">仅支持学生账号</string>
+    <string name="method_webview_role_help">本 app 只支持使用学生账号登录，请勿使用教师账号或家长账号。</string>
     <string name="method_import">从 智学网 app 导入</string>
     <string name="method_import_student">从 智学网学生端 导入</string>
     <string name="method_import_parent">从 智学网家长端 导入</string>

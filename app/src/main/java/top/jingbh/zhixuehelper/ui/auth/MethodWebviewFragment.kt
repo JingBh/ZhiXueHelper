@@ -15,7 +15,11 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.databinding.FragmentLoginWebviewBinding
 import javax.inject.Inject
 
@@ -27,7 +31,11 @@ class MethodWebviewFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginWebviewBinding
 
+    private lateinit var navController: NavController
+
     private val loginViewModel: LoginViewModel by activityViewModels()
+
+    private var finished = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +50,11 @@ class MethodWebviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.apply {
+        val activity = requireActivity()
+
+        navController = findNavController()
+
+        activity.apply {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
@@ -63,7 +75,10 @@ class MethodWebviewFragment : Fragment() {
                     url: String?,
                     isReload: Boolean
                 ) {
-                    if (Uri.parse(url).path?.startsWith("/container/container") == true) {
+                    if (finished) return
+
+                    val uri = Uri.parse(url)
+                    if (uri.path?.startsWith("/container/container") == true) {
                         Log.d(TAG, "login succeed")
 
                         val cookie = findCookie()
@@ -73,6 +88,20 @@ class MethodWebviewFragment : Fragment() {
                             Log.d(TAG, "found cookie: $cookie")
                             loginViewModel.updateCookie(cookie)
                         }
+
+                        finished = true
+                    } else if (uri.fragment?.contains("teacher") == true) {
+                        cookieManager.removeAllCookies {}
+
+                        MaterialAlertDialogBuilder(activity)
+                            .setTitle(R.string.method_webview_role)
+                            .setMessage(R.string.method_webview_role_help)
+                            .setPositiveButton(R.string.okay, null)
+                            .show()
+
+                        navController.navigateUp()
+
+                        finished = true
                     }
 
                     super.doUpdateVisitedHistory(view, url, isReload)
