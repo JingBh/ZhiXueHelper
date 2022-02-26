@@ -17,8 +17,8 @@ android {
         applicationId = "top.jingbh.zhixuehelper"
         minSdk = 23
         targetSdk = 31
-        versionCode = 4
-        versionName = "0.2.2"
+        versionCode = 5
+        versionName = "0.2.3"
         setProperty("archivesBaseName", "ZhiXueHelper-${versionName}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -88,27 +88,27 @@ dependencies {
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.fragment:fragment-ktx:1.4.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.4.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.4.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.4.1")
+    implementation("androidx.navigation:navigation-ui-ktx:2.4.1")
     implementation("androidx.paging:paging-runtime:3.1.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
-    implementation("androidx.startup:startup-runtime:1.1.0")
+    implementation("androidx.startup:startup-runtime:1.1.1")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation("androidx.window:window:1.0.0")
     implementation("com.android.volley:volley:1.2.1")
     implementation("com.auth0.android:jwtdecode:2.0.1")
     implementation("com.google.android.material:material:1.6.0-alpha02")
-    implementation("com.google.dagger:hilt-android:2.40.5")
+    implementation("com.google.dagger:hilt-android:2.41")
     implementation("com.microsoft.appcenter:appcenter-analytics:4.4.2")
     implementation("com.microsoft.appcenter:appcenter-crashes:4.4.2")
     implementation("io.github.reactivecircus.cache4k:cache4k:0.4.0")
     implementation("io.noties.markwon:core:4.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 
-    kapt("com.google.dagger:hilt-android-compiler:2.40.5")
+    kapt("com.google.dagger:hilt-android-compiler:2.41")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
