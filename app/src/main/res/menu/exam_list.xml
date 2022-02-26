@@ -36,14 +36,4 @@
 
     </item>
 
-    <item
-        android:id="@+id/switch_account"
-        android:title="@string/switch_account"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/about"
-        android:title="@string/about"
-        app:showAsAction="never" />
-
 </menu>

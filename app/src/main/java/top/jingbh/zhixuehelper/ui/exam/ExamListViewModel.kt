@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.update
 import top.jingbh.zhixuehelper.data.auth.UserRepository
 import top.jingbh.zhixuehelper.data.exam.ExamRepository
 import top.jingbh.zhixuehelper.data.exam.ExamType
@@ -15,50 +17,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExamListViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    userRepository: UserRepository,
     private val examRepository: ExamRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(ListExamUiState())
+    private val _uiState = MutableStateFlow(ExamListUiState())
 
     val uiState = _uiState.asStateFlow()
 
-    private val currentToken = MutableStateFlow<String?>(null)
+    private val tokenFlow = userRepository.getTokenFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pagingFlow = currentToken
-        .filterNotNull()
-        .distinctUntilChanged()
+    val pagingFlow = tokenFlow
         .flatMapLatest { token ->
             Log.d(TAG, "New pager generated")
             examRepository.getPager(token).flow
         }
         .cachedIn(viewModelScope)
-
-    fun checkLogin() {
-        viewModelScope.launch {
-            val result = userRepository.isLoggedIn()
-            _uiState.update { state ->
-                state.copy(
-                    isLoggedIn = result,
-                    isLoginNeeded = !result
-                )
-            }
-
-            if (result) {
-                val token = userRepository.getToken()
-                currentToken.emit(token)
-            }
-        }
-    }
-
-    fun wentToLogin() {
-        _uiState.update { state ->
-            state.copy(
-                isLoggedIn = false,
-                isLoginNeeded = false
-            )
-        }
-    }
 
     fun filterExamType(type: ExamType) {
         _uiState.update { state ->
@@ -74,9 +48,7 @@ class ExamListViewModel @Inject constructor(
         }
     }
 
-    data class ListExamUiState(
-        val isLoggedIn: Boolean = false,
-        val isLoginNeeded: Boolean = false,
+    data class ExamListUiState(
         val examTypes: Set<ExamType> = setOf()
     )
 

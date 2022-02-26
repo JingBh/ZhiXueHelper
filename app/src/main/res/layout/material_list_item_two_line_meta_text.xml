@@ -20,7 +20,8 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:minHeight="64dp"
-    android:paddingHorizontal="16dp">
+    android:paddingHorizontal="16dp"
+    android:transitionGroup="true">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/baseline_text"

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/exam"
+    app:startDestination="@id/exam_list">
+
+    <fragment
+        android:id="@+id/exam_list"
+        android:name="top.jingbh.zhixuehelper.ui.exam.ExamListFragment"
+        android:label="@string/exam_list"
+        tools:layout="@layout/fragment_exam_list">
+
+        <action
+            android:id="@+id/exam_list_to_details"
+            app:destination="@id/exam_details" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/exam_details"
+        android:name="top.jingbh.zhixuehelper.ui.exam.ExamDetailsFragment"
+        android:label="@string/exam_details"
+        tools:layout="@layout/fragment_exam_details">
+
+        <action
+            android:id="@+id/paper_details_to_analysis"
+            app:destination="@id/paper_analysis" />
+
+        <argument
+            android:name="exam"
+            app:argType="top.jingbh.zhixuehelper.data.exam.Exam"
+            app:nullable="false" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/paper_analysis"
+        android:name="top.jingbh.zhixuehelper.ui.exam.PaperAnalysisFragment"
+        android:label="@string/paper_analysis"
+        tools:layout="@layout/fragment_paper_analysis">
+
+        <argument
+            android:name="paper"
+            app:argType="top.jingbh.zhixuehelper.data.exam.ExamPaper"
+            app:nullable="false" />
+
+    </fragment>
+
+</navigation>

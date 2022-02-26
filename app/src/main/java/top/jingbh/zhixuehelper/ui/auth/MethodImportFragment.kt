@@ -19,12 +19,14 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.transition.platform.MaterialSharedAxis
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -62,6 +64,13 @@ class MethodImportFragment : Fragment() {
             }
         }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -74,62 +83,72 @@ class MethodImportFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            viewModel.uiState
-                .map { it.isCheckingPermissions }
-                .collect {
-                    binding.progress.visibility = if (it) View.VISIBLE else View.GONE
-                    binding.iconStatus.visibility = if (it) View.GONE else View.VISIBLE
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState
+                    .map { it.isCheckingPermissions }
+                    .collect {
+                        binding.progress.visibility = if (it) View.VISIBLE else View.GONE
+                        binding.iconStatus.visibility = if (it) View.GONE else View.VISIBLE
+                    }
+            }
         }
 
-        lifecycleScope.launch {
-            viewModel.uiState
-                .map { it.checkPermissionStatus }
-                .filterNotNull()
-                .collect { status ->
-                    val drawable = if (status) {
-                        AppCompatResources.getDrawable(
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState
+                    .map { it.checkPermissionStatus }
+                    .filterNotNull()
+                    .collect { status ->
+                        val drawable = if (status) {
+                            AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.ic_round_check_24
+                            )
+                        } else AppCompatResources.getDrawable(
                             requireContext(),
-                            R.drawable.ic_round_check_24
+                            R.drawable.ic_round_close_24
                         )
-                    } else AppCompatResources.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_round_close_24
-                    )
-                    binding.iconStatus.setImageDrawable(drawable)
-                }
+                        binding.iconStatus.setImageDrawable(drawable)
+                    }
+            }
         }
 
-        lifecycleScope.launch {
-            viewModel.uiState
-                .map { it.needsRequestPermission }
-                .filter { it }
-                .collect { requestPermission() }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState
+                    .map { it.needsRequestPermission }
+                    .filter { it }
+                    .collect { requestPermission() }
+            }
         }
 
-        lifecycleScope.launch {
-            viewModel.uiState
-                .filter { !it.isCheckingPermissions }
-                .map { it.failedMessage }
-                .filterNotNull()
-                .collect { message ->
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(R.string.import_fail)
-                        .setMessage(message)
-                        .setPositiveButton(R.string.okay, null)
-                        .setOnDismissListener { navigateUp() }
-                        .show()
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState
+                    .filter { !it.isCheckingPermissions }
+                    .map { it.failedMessage }
+                    .filterNotNull()
+                    .collect { message ->
+                        MaterialAlertDialogBuilder(requireContext())
+                            .setTitle(R.string.import_fail)
+                            .setMessage(message)
+                            .setPositiveButton(R.string.okay, null)
+                            .setOnDismissListener { navigateUp() }
+                            .show()
+                    }
+            }
         }
 
-        lifecycleScope.launch {
-            viewModel.token
-                .filterNotNull()
-                .collect { token ->
-                    loginViewModel.updateToken(token, true)
-                    navigateUp()
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.token
+                    .filterNotNull()
+                    .collect { token ->
+                        loginViewModel.updateToken(token, true)
+                        navigateUp()
+                    }
+            }
         }
 
         checkPermissions()

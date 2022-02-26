@@ -12,7 +12,7 @@
         android:usesCleartextTraffic="true">
 
         <activity
-            android:name=".ui.exam.ExamListActivity"
+            android:name=".ui.exam.ExamContainerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,12 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.exam.ExamListPlaceholderActivity" />
-
-        <activity android:name=".ui.exam.ExamDetailsActivity" />
-
-        <activity android:name=".ui.exam.PaperAnalysisActivity" />
 
         <activity
             android:name=".ui.auth.LoginActivity"
@@ -67,10 +61,6 @@
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
             tools:node="merge">
-
-            <meta-data
-                android:name="top.jingbh.zhixuehelper.initializer.WindowInitializer"
-                android:value="androidx.startup" />
 
             <meta-data
                 android:name="top.jingbh.zhixuehelper.initializer.CookieInitializer"

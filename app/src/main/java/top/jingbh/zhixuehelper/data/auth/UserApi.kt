@@ -3,7 +3,7 @@ package top.jingbh.zhixuehelper.data.auth
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 
 interface UserApi {
     suspend fun getToken(cookie: String): String?
@@ -12,7 +12,7 @@ interface UserApi {
 }
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 abstract class UserApiModule {
     @Binds
     abstract fun bindUserApi(

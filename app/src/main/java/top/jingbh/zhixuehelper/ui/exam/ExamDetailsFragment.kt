@@ -1,15 +1,19 @@
 package top.jingbh.zhixuehelper.ui.exam
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.transition.platform.MaterialSharedAxis
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -17,31 +21,45 @@ import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import top.jingbh.zhixuehelper.R
-import top.jingbh.zhixuehelper.data.exam.Exam
-import top.jingbh.zhixuehelper.databinding.ActivityExamDetailsBinding
+import top.jingbh.zhixuehelper.databinding.FragmentExamDetailsBinding
 import top.jingbh.zhixuehelper.ui.util.EmptyFragment
 
 @AndroidEntryPoint
-class ExamDetailsActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityExamDetailsBinding
+class ExamDetailsFragment : Fragment() {
+    private lateinit var binding: FragmentExamDetailsBinding
 
     private lateinit var adapter: FragmentStateAdapter
 
     private val viewModel: ExamDetailsViewModel by viewModels()
 
+    private val args: ExamDetailsFragmentArgs by navArgs()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val exam = intent.getSerializableExtra(EXTRA_EXAM) as Exam
-        viewModel.initSetExam(exam)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
 
-        binding = ActivityExamDetailsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentExamDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding.topAppBar.setNavigationOnClickListener { finish() }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+        val activity = requireActivity()
+
+        viewModel.initSetExam(args.exam)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState
                     .map { it.isLoading }
                     .distinctUntilChanged()
@@ -52,24 +70,24 @@ class ExamDetailsActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.exam
                     .distinctUntilChangedBy { it.id }
                     .collect {
-                        binding.topAppBar.title = it.name
+                        findNavController().currentDestination?.label = it.name
                     }
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.papers
                 .distinctUntilChanged()
                 .collectLatest { papers ->
                     binding.tabLayout.visibility =
                         if (papers.isEmpty()) View.GONE else View.VISIBLE
 
-                    adapter = object : FragmentStateAdapter(this@ExamDetailsActivity) {
+                    adapter = object : FragmentStateAdapter(activity) {
                         override fun getItemCount(): Int {
                             val count = papers.count()
                             return if (count == 0) 1 else count
@@ -100,9 +118,5 @@ class ExamDetailsActivity : AppCompatActivity() {
                     }.attach()
                 }
         }
-    }
-
-    companion object {
-        const val EXTRA_EXAM = "top.jingbh.zhixuehelper.extra.EXAM"
     }
 }

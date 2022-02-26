@@ -1,13 +1,16 @@
 package top.jingbh.zhixuehelper.ui.exam
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -15,31 +18,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.ColorRoles
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.divider.MaterialDividerItemDecoration
+import com.google.android.material.transition.platform.MaterialSharedAxis
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import top.jingbh.zhixuehelper.R
-import top.jingbh.zhixuehelper.data.exam.ExamPaper
 import top.jingbh.zhixuehelper.data.exam.ExamPaperTopic
 import top.jingbh.zhixuehelper.data.util.CustomRequestQueue
-import top.jingbh.zhixuehelper.databinding.ActivityPaperAnalysisBinding
+import top.jingbh.zhixuehelper.databinding.FragmentPaperAnalysisBinding
 import top.jingbh.zhixuehelper.databinding.ItemPaperAnalysisIndexBinding
 import top.jingbh.zhixuehelper.ui.util.TopicTitleMatcher
 import top.jingbh.zhixuehelper.ui.util.VerticalSpaceItemDecoration
 import top.jingbh.zhixuehelper.ui.util.dpToPx
 import javax.inject.Inject
-import top.jingbh.zhixuehelper.ui.exam.PaperAnalysisTopicViewHolder as TopicViewHolder
 
 @AndroidEntryPoint
-class PaperAnalysisActivity : AppCompatActivity() {
+class PaperAnalysisFragment : Fragment() {
     @Inject
     lateinit var requestQueue: CustomRequestQueue
 
-    private lateinit var binding: ActivityPaperAnalysisBinding
+    private lateinit var binding: FragmentPaperAnalysisBinding
 
     private val viewModel: PaperAnalysisViewModel by viewModels()
+
+    private val args: PaperAnalysisFragmentArgs by navArgs()
 
     private val indexAdapter = IndexAdapter()
     private val topicAdapter = TopicAdapter()
@@ -51,13 +55,25 @@ class PaperAnalysisActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val paper = intent.getSerializableExtra(EXTRA_PAPER) as ExamPaper
-        viewModel.initSetPaper(paper)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
 
-        binding = ActivityPaperAnalysisBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentPaperAnalysisBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding.topAppBar.setNavigationOnClickListener { finish() }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val activity = requireActivity()
+
+        viewModel.initSetPaper(args.paper)
 
         binding.index.apply {
             adapter = indexAdapter
@@ -68,7 +84,7 @@ class PaperAnalysisActivity : AppCompatActivity() {
 
         binding.list.apply {
             layoutManager = object : LinearLayoutManager(
-                this@PaperAnalysisActivity,
+                activity,
                 RecyclerView.VERTICAL,
                 false
             ) {
@@ -82,9 +98,8 @@ class PaperAnalysisActivity : AppCompatActivity() {
             }
             adapter = topicAdapter
 
-            val context = this@PaperAnalysisActivity
             val divider = MaterialDividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-            divider.setDividerColorResource(context, R.color.material_divider_color)
+            divider.setDividerColorResource(activity, R.color.material_divider_color)
             addItemDecoration(divider)
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -98,14 +113,14 @@ class PaperAnalysisActivity : AppCompatActivity() {
         }
 
         colorCorrectRoles =
-            MaterialColors.getColorRoles(this, getColor(R.color.md_seed_success))
+            MaterialColors.getColorRoles(activity, activity.getColor(R.color.md_seed_success))
         colorHalfCorrectRoles =
-            MaterialColors.getColorRoles(this, getColor(R.color.md_seed_warning))
+            MaterialColors.getColorRoles(activity, activity.getColor(R.color.md_seed_warning))
         colorWrongRoles =
-            MaterialColors.getColorRoles(this, getColor(R.color.md_seed_error))
+            MaterialColors.getColorRoles(activity, activity.getColor(R.color.md_seed_error))
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState
                     .map { it.isLoading }
                     .distinctUntilChanged()
@@ -115,18 +130,19 @@ class PaperAnalysisActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.paper
                     .map { it.fullName }
                     .distinctUntilChanged()
                     .collectLatest { paperName ->
-                        binding.topAppBar.subtitle = paperName
+                        val actionBar = (activity as AppCompatActivity).supportActionBar
+                        actionBar?.subtitle = paperName
                     }
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.analysis
                 .collectLatest { analysis ->
                     indexAdapter.submitList(analysis)
@@ -135,7 +151,7 @@ class PaperAnalysisActivity : AppCompatActivity() {
         }
     }
 
-    private inner class TopicAdapter : ListAdapter<ExamPaperTopic, TopicViewHolder>(
+    private inner class TopicAdapter : ListAdapter<ExamPaperTopic, PaperAnalysisTopicViewHolder>(
         object : DiffUtil.ItemCallback<ExamPaperTopic>() {
             override fun areItemsTheSame(
                 oldItem: ExamPaperTopic,
@@ -152,11 +168,18 @@ class PaperAnalysisActivity : AppCompatActivity() {
             }
         }
     ) {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicViewHolder {
-            return TopicViewHolder.create(layoutInflater, parent, requestQueue.imageLoader)
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): PaperAnalysisTopicViewHolder {
+            return PaperAnalysisTopicViewHolder.create(
+                layoutInflater,
+                parent,
+                requestQueue.imageLoader
+            )
         }
 
-        override fun onBindViewHolder(holder: TopicViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: PaperAnalysisTopicViewHolder, position: Int) {
             holder.bind(getItem(position))
         }
     }
@@ -216,13 +239,9 @@ class PaperAnalysisActivity : AppCompatActivity() {
 
             binding.root.isSelected = selected
             if (!selected) binding.root.setOnClickListener {
-                this@PaperAnalysisActivity.binding.list
+                this@PaperAnalysisFragment.binding.list
                     .smoothScrollToPosition(bindingAdapterPosition)
             }
         }
-    }
-
-    companion object {
-        const val EXTRA_PAPER = "top.jingbh.zhixuehelper.extra.PAPER"
     }
 }

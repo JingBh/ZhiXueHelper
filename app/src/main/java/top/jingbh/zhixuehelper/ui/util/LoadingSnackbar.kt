@@ -16,9 +16,9 @@ fun makeLoadingSnackbar(view: View, @StringRes text: Int = R.string.loading): Sn
     val contentLayout = snackbar.view.findViewById<View>(barTextId).parent as ViewGroup
 
     val progress = CircularProgressIndicator(context).apply {
-        setPadding(0, context.dpToPx(4), 0, context.dpToPx(4))
-        trackThickness = context.dpToPx(3)
-        indicatorSize = context.dpToPx(32)
+        setPadding(0, dpToPx(4), 0, dpToPx(4))
+        trackThickness = dpToPx(3)
+        indicatorSize = dpToPx(32)
         isIndeterminate = true
     }
     contentLayout.addView(progress, 0)

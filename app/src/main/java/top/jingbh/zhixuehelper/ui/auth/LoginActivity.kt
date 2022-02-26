@@ -15,7 +15,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -25,7 +24,7 @@ import org.json.JSONObject
 import org.json.JSONTokener
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.databinding.ActivityLoginBinding
-import top.jingbh.zhixuehelper.ui.exam.ExamListActivity
+import top.jingbh.zhixuehelper.ui.exam.ExamContainerActivity
 import top.jingbh.zhixuehelper.ui.misc.AboutActivity
 import top.jingbh.zhixuehelper.ui.util.makeLoadingSnackbar
 import java.io.FileNotFoundException
@@ -93,7 +92,7 @@ class LoginActivity : AppCompatActivity() {
                     .filter { it }
                     .collect {
                         val intent =
-                            Intent(this@LoginActivity, ExamListActivity::class.java)
+                            Intent(this@LoginActivity, ExamContainerActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()

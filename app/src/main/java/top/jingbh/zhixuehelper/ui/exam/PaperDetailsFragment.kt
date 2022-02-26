@@ -1,6 +1,5 @@
 package top.jingbh.zhixuehelper.ui.exam
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.android.volley.toolbox.NetworkImageView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -105,10 +105,8 @@ class PaperDetailsFragment : Fragment() {
         }
 
         binding.paperAnswersCard.setOnClickListener {
-            val intent = Intent(it.context, PaperAnalysisActivity::class.java)
-            intent.putExtra(PaperAnalysisActivity.EXTRA_PAPER, paper)
-
-            startActivity(intent)
+            val action = ExamDetailsFragmentDirections.paperDetailsToAnalysis(paper)
+            findNavController().navigate(action)
         }
     }
 

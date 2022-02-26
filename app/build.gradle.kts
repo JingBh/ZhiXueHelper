@@ -97,7 +97,6 @@ dependencies {
     implementation("androidx.startup:startup-runtime:1.1.1")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
-    implementation("androidx.window:window:1.0.0")
     implementation("com.android.volley:volley:1.2.1")
     implementation("com.auth0.android:jwtdecode:2.0.1")
     implementation("com.google.android.material:material:1.6.0-alpha02")

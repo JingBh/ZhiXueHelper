@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.transition.platform.MaterialSharedAxis
 import dagger.hilt.android.AndroidEntryPoint
 import top.jingbh.zhixuehelper.databinding.FragmentLoginChooseBinding
 import top.jingbh.zhixuehelper.databinding.ItemLoginMethodBinding
@@ -26,6 +27,13 @@ class ChooseFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginChooseBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,7 +49,7 @@ class ChooseFragment : Fragment() {
         val listAdapter = Adapter()
         binding.list.apply {
             adapter = listAdapter
-            addItemDecoration(VerticalSpaceItemDecoration(context.dpToPx(24)))
+            addItemDecoration(VerticalSpaceItemDecoration(dpToPx(24)))
         }
 
         val methods = LoginMethod.getAvailableMethods(packageManager)
