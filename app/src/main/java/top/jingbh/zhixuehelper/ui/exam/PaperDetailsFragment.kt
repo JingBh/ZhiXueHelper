@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.android.volley.toolbox.NetworkImageView
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -19,6 +20,7 @@ import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.ExamPaper
 import top.jingbh.zhixuehelper.data.util.CustomRequestQueue
 import top.jingbh.zhixuehelper.databinding.FragmentPaperDetailsBinding
+import top.jingbh.zhixuehelper.ui.util.OSSGlideUrl
 import top.jingbh.zhixuehelper.ui.util.emitDigits
 import javax.inject.Inject
 
@@ -64,7 +66,7 @@ class PaperDetailsFragment : Fragment() {
                     this@PaperDetailsFragment.paper = paper
 
                     binding.paperScoreMine.text = paper.userScore.emitDigits()
-                    binding.paperScoreMax.text = " / " + paper.fullScore.emitDigits()
+                    binding.paperScoreMax.text = " / ${paper.fullScore.emitDigits()}"
 
                     val assignedScore = paper.userLevel
                     if (assignedScore != null) {
@@ -84,7 +86,7 @@ class PaperDetailsFragment : Fragment() {
                     binding.paperOriginalList.run {
                         removeAllViews()
                         images.forEach { uri ->
-                            val imageView = NetworkImageView(this.context)
+                            val imageView = ImageView(context)
 
                             addView(
                                 imageView,
@@ -94,8 +96,10 @@ class PaperDetailsFragment : Fragment() {
                                 )
                             )
 
-                            imageView.setDefaultImageResId(R.drawable.placeholder)
-                            imageView.setImageUrl(uri.toString(), requestQueue.imageLoader)
+                            Glide.with(this)
+                                .load(OSSGlideUrl.of(uri))
+                                .placeholder(R.drawable.placeholder)
+                                .into(imageView)
                         }
                     }
 

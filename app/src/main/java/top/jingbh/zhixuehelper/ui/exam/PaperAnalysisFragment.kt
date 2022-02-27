@@ -26,19 +26,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.ExamPaperTopic
-import top.jingbh.zhixuehelper.data.util.CustomRequestQueue
 import top.jingbh.zhixuehelper.databinding.FragmentPaperAnalysisBinding
 import top.jingbh.zhixuehelper.databinding.ItemPaperAnalysisIndexBinding
 import top.jingbh.zhixuehelper.ui.util.TopicTitleMatcher
 import top.jingbh.zhixuehelper.ui.util.VerticalSpaceItemDecoration
 import top.jingbh.zhixuehelper.ui.util.dpToPx
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class PaperAnalysisFragment : Fragment() {
-    @Inject
-    lateinit var requestQueue: CustomRequestQueue
-
     private lateinit var binding: FragmentPaperAnalysisBinding
 
     private val viewModel: PaperAnalysisViewModel by viewModels()
@@ -172,11 +167,7 @@ class PaperAnalysisFragment : Fragment() {
             parent: ViewGroup,
             viewType: Int
         ): PaperAnalysisTopicViewHolder {
-            return PaperAnalysisTopicViewHolder.create(
-                layoutInflater,
-                parent,
-                requestQueue.imageLoader
-            )
+            return PaperAnalysisTopicViewHolder.create(layoutInflater, parent)
         }
 
         override fun onBindViewHolder(holder: PaperAnalysisTopicViewHolder, position: Int) {

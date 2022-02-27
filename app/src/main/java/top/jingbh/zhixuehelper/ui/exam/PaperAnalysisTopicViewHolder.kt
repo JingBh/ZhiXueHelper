@@ -4,10 +4,10 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.toolbox.ImageLoader
-import com.android.volley.toolbox.NetworkImageView
+import com.bumptech.glide.Glide
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.textview.MaterialTextView
 import org.json.JSONArray
@@ -16,6 +16,7 @@ import top.jingbh.zhixuehelper.R
 import top.jingbh.zhixuehelper.data.exam.ExamPaperTopic
 import top.jingbh.zhixuehelper.data.exam.ExamPaperTopicType
 import top.jingbh.zhixuehelper.databinding.ItemPaperAnalysisTopicBinding
+import top.jingbh.zhixuehelper.ui.util.OSSGlideUrl
 import top.jingbh.zhixuehelper.ui.util.TopicTitleMatcher
 import top.jingbh.zhixuehelper.ui.util.emitDigits
 
@@ -23,8 +24,6 @@ class PaperAnalysisTopicViewHolder private constructor(
     private val binding: ItemPaperAnalysisTopicBinding
 ) : RecyclerView.ViewHolder(binding.root) {
     private lateinit var layoutInflater: LayoutInflater
-
-    private lateinit var imageLoader: ImageLoader
 
     private val context = binding.root.context
 
@@ -65,7 +64,7 @@ class PaperAnalysisTopicViewHolder private constructor(
                         if (imagesJson.length() == 0) binding.userAnswerCard.visibility = View.GONE
 
                         for (i in 0 until imagesJson.length()) {
-                            val imageView = NetworkImageView(context)
+                            val imageView = ImageView(context)
 
                             addView(
                                 imageView,
@@ -75,8 +74,10 @@ class PaperAnalysisTopicViewHolder private constructor(
                                 )
                             )
 
-                            imageView.setDefaultImageResId(R.drawable.placeholder)
-                            imageView.setImageUrl(imagesJson.getString(i), imageLoader)
+                            Glide.with(this)
+                                .load(OSSGlideUrl.of(imagesJson.getString(i)))
+                                .placeholder(R.drawable.placeholder)
+                                .into(imageView)
                         }
                     }
             }
@@ -99,7 +100,7 @@ class PaperAnalysisTopicViewHolder private constructor(
                     findViewById<LinearLayoutCompat>(R.id.answerImages).apply {
                         removeAllViews()
 
-                        val imageView = NetworkImageView(context)
+                        val imageView = ImageView(context)
 
                         addView(
                             imageView,
@@ -109,8 +110,10 @@ class PaperAnalysisTopicViewHolder private constructor(
                             )
                         )
 
-                        imageView.setDefaultImageResId(R.drawable.placeholder)
-                        imageView.setImageUrl(topic.standardAnswer, imageLoader)
+                        Glide.with(this)
+                            .load(OSSGlideUrl.of(topic.standardAnswer))
+                            .placeholder(R.drawable.placeholder)
+                            .into(imageView)
                     }
                 } else {
                     // not url
@@ -147,13 +150,11 @@ class PaperAnalysisTopicViewHolder private constructor(
     companion object {
         fun create(
             layoutInflater: LayoutInflater,
-            parent: ViewGroup,
-            imageLoader: ImageLoader
+            parent: ViewGroup
         ): PaperAnalysisTopicViewHolder {
             val binding = ItemPaperAnalysisTopicBinding.inflate(layoutInflater, parent, false)
             val viewHolder = PaperAnalysisTopicViewHolder(binding)
             viewHolder.layoutInflater = layoutInflater
-            viewHolder.imageLoader = imageLoader
             return viewHolder
         }
     }

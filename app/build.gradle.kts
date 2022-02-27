@@ -101,6 +101,8 @@ dependencies {
     implementation("com.auth0.android:jwtdecode:2.0.1")
     implementation("com.google.android.material:material:1.6.0-alpha02")
     implementation("com.google.dagger:hilt-android:2.41")
+    implementation("com.github.bumptech.glide:glide:4.13.1")
+    implementation("com.github.bumptech.glide:volley-integration:4.13.1")
     implementation("com.microsoft.appcenter:appcenter-analytics:4.4.2")
     implementation("com.microsoft.appcenter:appcenter-crashes:4.4.2")
     implementation("io.github.reactivecircus.cache4k:cache4k:0.4.0")
@@ -108,6 +110,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 
     kapt("com.google.dagger:hilt-android-compiler:2.41")
+    kapt("com.github.bumptech.glide:compiler:4.13.1")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
