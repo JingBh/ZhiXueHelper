@@ -1,9 +1,11 @@
 package top.jingbh.zhixuehelper.ui.exam
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
 import top.jingbh.zhixuehelper.data.auth.UserRepository
 import top.jingbh.zhixuehelper.data.exam.Exam
 import top.jingbh.zhixuehelper.data.exam.ExamRepository
@@ -22,6 +24,8 @@ class ExamDetailsViewModel @Inject constructor(
 
     val exam = _exam.asStateFlow().filterNotNull()
 
+    private val tokenFlow = userRepository.getTokenFlow()
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val papers = exam
         .distinctUntilChangedBy { it.id }
@@ -30,7 +34,7 @@ class ExamDetailsViewModel @Inject constructor(
                 state.copy(isLoading = true)
             }
 
-            val token = userRepository.getToken()
+            val token = tokenFlow.value
             val result = if (token != null) {
                 try {
                     examRepository.getExamPaperList(token, exam)
@@ -50,6 +54,7 @@ class ExamDetailsViewModel @Inject constructor(
             result
         }
         .filterNotNull()
+        .shareIn(viewModelScope, Lazily, 1)
 
     fun initSetExam(exam: Exam) {
         if (_exam.value?.id != exam.id)

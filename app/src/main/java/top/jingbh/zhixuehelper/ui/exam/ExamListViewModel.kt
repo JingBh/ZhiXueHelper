@@ -6,10 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import top.jingbh.zhixuehelper.data.auth.UserRepository
 import top.jingbh.zhixuehelper.data.exam.ExamRepository
 import top.jingbh.zhixuehelper.data.exam.ExamType
@@ -28,6 +25,8 @@ class ExamListViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagingFlow = tokenFlow
+        .filterNotNull()
+        .distinctUntilChanged()
         .flatMapLatest { token ->
             Log.d(TAG, "New pager generated")
             examRepository.getPager(token).flow

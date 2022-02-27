@@ -1,9 +1,11 @@
 package top.jingbh.zhixuehelper.ui.exam
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
 import top.jingbh.zhixuehelper.data.auth.UserRepository
 import top.jingbh.zhixuehelper.data.exam.ExamPaper
 import top.jingbh.zhixuehelper.data.exam.ExamRepository
@@ -51,6 +53,7 @@ class PaperAnalysisViewModel @Inject constructor(
         }
         .filterNotNull()
         .map { analysis -> analysis.sortedBy { it.id } }
+        .shareIn(viewModelScope, Lazily, 1)
 
     fun initSetPaper(paper: ExamPaper) {
         if (_paper.value?.id != paper.id)

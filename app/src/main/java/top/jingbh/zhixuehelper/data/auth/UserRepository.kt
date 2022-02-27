@@ -4,8 +4,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -63,8 +61,6 @@ class UserRepository @Inject constructor(
     }
 
     fun getTokenFlow() = tokenFlow.asStateFlow()
-        .filterNotNull()
-        .distinctUntilChanged()
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
